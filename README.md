@@ -32,7 +32,6 @@ Este es un sensor PIR (passive infrared), se escogió la referencia HC-SR501. El
 
 [<img src="fig/Specification - HC-SR501.pdf.png" width="500" alt="Pines Sensor pir"/>](fig)
 
-Y LINKS 
 
 ## Sistema de visualización 
 Se eligieron does maneras de visualización:
