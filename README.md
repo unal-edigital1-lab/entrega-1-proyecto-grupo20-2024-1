@@ -30,7 +30,7 @@ Se escogieron dos sensores
 
 Este es un sensor PIR (passive infrared), se escogió la referencia HC-SR501. El cual tiene una capacidad de deteccion dentro de un cono de 110° entre 3 a 7 metros de distancia, y tiene la siguiente descripción de pines[1]. 
 
-[<img src="fig/Screenshot 2024-04-22 at 18-55-58 Specification - HC-SR501.pdf.png" width="500" alt="Pines Sensor pir"/>](fig)
+[<img src="fig/Specification - HC-SR501.pdf.png" width="500" alt="Pines Sensor pir"/>](fig)
 
 Y LINKS 
 
@@ -41,7 +41,9 @@ Se eligieron does maneras de visualización:
 
 [<img src="fig/Nokia-5110-LCD-block-diagram.webp" width="500" alt="Diagrama controlador LCD"/>](fig)
 
-Además su descricpcion de pines es esta:
+[<img src="fig/LCD controller_driver - NOKIA 5110.pdf.png" width="500" alt="Pinning controlador LCD"/>](fig)
+
+Además su descripción de pines es esta:
 
 [<img src="fig/Nokia-5110-LCD-Pinout-diagram-details.webp" width="500" alt="Pines LCD"/>](fig)
 
