@@ -34,28 +34,26 @@ Este proyecto se centra en la creación de un tamagotchi (mascota virtual) media
 ***
 ## Componentes
 
-AGREGAR FPGA
+### FPGA
 
-### HC-SR501
+### HC-SR04
 
 * Descrippción Funcional
-Este es un sensor PIR (passive infrared) y se escogió la referencia HC-SR501. La cual tiene una capacidad de detección dentro de un cono de 110° entre 3 a 7 metros de distancia, y tiene la siguiente descripción de pines[1]. 
-[<img src="fig/Specification - HC-SR501.pdf.png" width="500" alt="Pines Sensor pir"/>](fig)
-Este sensor tiene 3 pines de conexión como se ve en la imagen, donde 1 es VCC (power cathode), 2 es la salida (output signal) y 3 es ground (power anode), y además tiene 2 reostatos de calibración, Ch1 y RL2.
-- Ch1: Con este reostato se puede establecer el tiempo de activación de la salida del sensor.
-- RL2: Este reostato permite establecer la distancia de detección (3 m a 7 m).
+
+Este es un sensor ultrasónico que tiene una capacidad de detección dentro de un rango entre 0.3 a 3 metros de distancia, y tiene la siguiente descripción de pines[1]. 
+[<img src="fig/HC-SR04-Ultrasonic.pdf.png" width="500" alt="Pines Sensor ultrasónico"/>](fig)
+
+Este sensor tiene 4 pines de conexión como se ve en la imagen, 
+
+donde (de izquierda a derecha)  1 es VCC (power cathode), 2 es la entrada, 3 es la salida proporcional a la distancia (ECHO) y 4 es ground (power anode).
 
 * Especificaciones
-- Voltaje de alimentación DC: 5V a 20V
-- Consumo de corriente en reposo: < 50 μA
-- Controlador PIR: BISS0001
-- Rango de detección: 3 m a 7 m, ajustable mediante reostato
-- Lente fresnel de 19 zonas, ángulo < 120º
-- Salida activa alta a 3.3 V
-- Tiempo en estado activo de la salida configurable mediante reostato
-- Redisparo configurable mediante jumper de soldadura
-- Rango de temperatura en operación: -15 °C a 70 °C
-- Dimensiones: 32 mm x 24 mm 
+- Voltaje de alimentación DC: 3V- 5V
+- Consumo de corriente en reposo: < 2mA
+- Corriente de operación : 15mA
+- Rango de detección: 2cm a 400cm ± 3mm
+- Ángulo efectivo 15º
+- Dimensiones: 45 mm x 20 mm x 15 mm
 
 * Diagrama de Caja Negra
 
@@ -155,23 +153,16 @@ Los LEDS de 7 segmentos se encargarán de mostrar el nivel de cada uno de los es
     - Sensor Fotorresistencia: dependiendo de si el valor es 1 o 0 se hará de día o de noche para la mascota. En el modo de noche descansara y recuperará su energía dependiendo del tiempo de reposo, en este modo no interactuará con nosotros de ninguna manera hasta que sea el modo de día, donde estará activa y lista para interactuar nuevamente.
     - Sensor Ultrasonido: dependiendo de si hay un obstaculo o no en el rango de visión del sensor, la mascota lo tomará como un obstaculo a saltar que aumentará su nivel de diversión, permitiendonos simular un juego de saltar con ella.
 
-**Resumen estados y perifericos**
-
-
 
 ## Conexión Sistema
 
 
-
-
 # Referencias
-[1]  “HC--SR501,” *Electronilab*. https://electronilab.co/wp-content/uploads/2013/12/HC-SR501.pdf
+[1] “HC-SR04 Ultrasonic Sensor Module User Guide,” *HandsOnTech*. https://www.handsontec.com/dataspecs/HC-SR04-Ultrasonic.pdf
 
 [2]“Nokia5110 LCD Module,” *Microcontrollers Lab*, Ene. 28, 2020. https://microcontrollerslab.com/nokia5110-lcd-pinout-arduino-interfacing-datasheet/ 
 
-[3]“HC-SR501 Passive Infrared (PIR) Motion Sensor”. https://www.epitran.it/ebayDrive/datasheet/44.pdf
-
-[4]Philips Semiconductors, “PCD8544 Datasheet ,” *Sigma Electronica*, Abr. 12, 1999. https://www.sigmaelectronica.net/manuals/NOKIA%205110.pdf 
+[3]Philips Semiconductors, “PCD8544 Datasheet ,” *Sigma Electronica*, Abr. 12, 1999. https://www.sigmaelectronica.net/manuals/NOKIA%205110.pdf 
 
 https://ferretronica.com/products/sensor-de-movimiento-pir-hc-sr501
 
