@@ -38,7 +38,7 @@ Este proyecto se centra en la creación de un tamagotchi (mascota virtual) media
 
 ### HC-SR04
 
-* Descrippción Funcional
+* Descripción Funcional
 
 Este es un sensor ultrasónico que tiene una capacidad de detección dentro de un rango entre 0.3 a 3 metros de distancia, y tiene la siguiente descripción de pines[1]. 
 [<img src="fig/HC-SR04-Ultrasonic.pdf.png" width="500" alt="Pines Sensor ultrasónico"/>](fig)
@@ -48,12 +48,12 @@ Este sensor tiene 4 pines de conexión como se ve en la imagen,
 donde (de izquierda a derecha)  1 es VCC (power cathode), 2 es la entrada, 3 es la salida proporcional a la distancia (ECHO) y 4 es ground (power anode).
 
 * Especificaciones
-- Voltaje de alimentación DC: 3V- 5V
-- Consumo de corriente en reposo: < 2mA
-- Corriente de operación : 15mA
-- Rango de detección: 2cm a 400cm ± 3mm
-- Ángulo efectivo 15º
-- Dimensiones: 45 mm x 20 mm x 15 mm
+    - Voltaje de alimentación DC: 3V- 5V
+    - Consumo de corriente en reposo: < 2mA
+    - Corriente de operación : 15mA
+    - Rango de detección: 2cm a 400cm ± 3mm
+    - Ángulo efectivo 15º
+    - Dimensiones: 45 mm x 20 mm x 15 mm
 
 * Diagrama de Caja Negra
 
