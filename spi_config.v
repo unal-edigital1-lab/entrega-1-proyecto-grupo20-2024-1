@@ -118,19 +118,19 @@ module spi_config(
 		end
 		
 		HAPPY: begin //dibujar
-			poss_x<=8'h80;
-			poss_y<=8'h40;
+			poss_x<=8'hA8;
+			poss_y<=8'h42;
 			back<=0;	
 			case(count)
-				4'h0: begin comm<=0; poss_x<= poss_x+14; message<=poss_x;//cambia direccion en x 128 +20 (148 dec)
+				4'h0: begin comm<=0; message<=poss_x;//cambia direccion en x 128 +40 (168 dec)
 			if(avail) count<=4'h1;
 			end
 			
-			4'h1: begin poss_y<=poss_y+3; message<=poss_y; // en y 64+ 3
+			4'h1: begin  message<=poss_y; // en y 64+ 2
 			if(avail) count<=4'h2;
 			end
 			
-			4'h2: begin comm<=1; message<=8'b00011111;//dibujo 
+			4'h2: begin comm<=1; message<=8'h1F;//8'b00011111;//dibujo 
 			if(avail) count<=4'h3;
 			end
 			
@@ -138,11 +138,11 @@ module spi_config(
 			if(avail) count<=4'h4;
 			end
 			
-			4'h4: begin comm<=1;	message<=8'b00011111;
+			4'h4: begin comm<=1;	message<=8'h1F;//8'b00011111;
 			if(avail) count<=4'h5;
 			end
 			
-			4'h5: begin comm<=0; poss_x<= poss_x-6; message<=poss_x;  //-6 en x, 146 dec
+			4'h5: begin comm<=0; poss_x<= poss_x+6; message<=poss_x;  //-6 en x, 146 dec
 			if(avail) count<=4'h6;
 			end
 			
@@ -150,28 +150,28 @@ module spi_config(
 			if(avail) count<=4'h7;
 			end
 			
-			4'h7: begin comm<=1;	message<=8'b00000001;
+			4'h7: begin comm<=1;	message<=8'h1;
 			if(avail) count<=4'h8;
 			end
 			
-			4'h8: begin message<=8'b00000010;
+			4'h8: begin message<=8'h2;
 			if(avail) count<=4'h9;
 			end
 			
-			4'h9: begin message<=8'b00000100;
+			4'h9: begin message<=8'h4;
 			if(avail)
-				if (i<=5) begin 
+				if (i < 5) begin 
 					count<=4'h9;
 					i<=i+1;
 				end
 				else count<=4'hA;
 			end
 			
-			4'hA: begin message<=8'b00000010;
+			4'hA: begin message<=8'h2;
 			if(avail) count<=4'hB;
 			end
 			
-			4'hB: begin message<=8'b00000001;
+			4'hB: begin message<=8'h1;
 			if(avail) spistart=0;
 			end
 			
