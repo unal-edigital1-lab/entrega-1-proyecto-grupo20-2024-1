@@ -117,7 +117,7 @@ module spi_config(
 			endcase
 		end
 		
-		HAPPY: begin //dibujar
+		SKZ: begin //dibujar
 			poss_x<=8'h23;
 			poss_y<=8'h42;
 			back<=0;	
