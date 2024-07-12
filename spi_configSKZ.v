@@ -47,7 +47,7 @@ module spi_config(
 	reg [4:0] count=4'h0;
 	
 	parameter INIT=4'h0;
-	parameter HAPPY=4'h1;
+	parameter SKZ=4'h1;
 	
 	reg [10:0] i=0;
 	assign freq_div=25000000;//25000 freq deseada 1k (max 4M)div_factor 
@@ -118,61 +118,72 @@ module spi_config(
 		end
 		
 		HAPPY: begin //dibujar
-			poss_x<=8'hA8;
+			poss_x<=8'h23;
 			poss_y<=8'h42;
 			back<=0;	
 			case(count)
-				4'h0: begin comm<=0; message<=poss_x;//cambia direccion en x 128 +40 (168 dec)
+				4'h0: begin comm<=0; message<=poss_x;
 			if(avail) count<=4'h1;
 			end
 			
-			4'h1: begin  message<=poss_y; // en y 64+ 2
+			4'h1: begin  message<=poss_y; 
 			if(avail) count<=4'h2;
 			end
 			
-			4'h2: begin comm<=1; message<=8'h1F;//8'b00011111;//dibujo 
+			4'h2: begin comm<=1; message<=8'b00001001;//mas entendible en binario
 			if(avail) count<=4'h3;
 			end
 			
-				4'h3: begin comm<=0; poss_x<= poss_x+4; message<=poss_x; //+4 en x (en dec y hexa)
+			4'h3: begin message<=8'b00010101;
 			if(avail) count<=4'h4;
 			end
 			
-			4'h4: begin comm<=1;	message<=8'h1F;//8'b00011111;
+			4'h4: begin message<=8'b00010101;
 			if(avail) count<=4'h5;
 			end
 			
-			4'h5: begin comm<=0; poss_x<= poss_x+6; message<=poss_x;  //-6 en x, 146 dec
+			4'h5: begin  message<=8'b00010010;
 			if(avail) count<=4'h6;
 			end
 			
-			4'h6: begin poss_y<=poss_y-1; message<=poss_y; // 1 down en y, 67 dec
+			4'h6: begin comm<=0; poss_x<=poss_x+5; message<=poss_x; 
 			if(avail) count<=4'h7;
 			end
 			
-			4'h7: begin comm<=1;	message<=8'h1;
+			4'h7: begin comm<=1;	message<=8'b00011111;
 			if(avail) count<=4'h8;
 			end
 			
-			4'h8: begin message<=8'h2;
+			4'h8: begin message<=8'b00000100;
 			if(avail) count<=4'h9;
 			end
 			
-			4'h9: begin message<=8'h4;
-			if(avail)
-				if (i < 5) begin 
-					count<=4'h9;
-					i<=i+1;
-				end
-				else count<=4'hA;
+			4'h9: begin message<=8'b00001010;
+			if(avail) count<=4'hA;
 			end
 			
-			4'hA: begin message<=8'h2;
+			4'hA: begin message<=8'b00010001;
 			if(avail) count<=4'hB;
 			end
 			
-			4'hB: begin message<=8'h1;
-			if(avail) spistart=0;
+			4'hB: begin comm<=0; poss_x<=poss_x+5; message<=poss_x; 
+			if(avail) count<=4'hC;
+			end
+
+			4'hC: begin message<=8'b00010011;
+			if(avail) count<=4'hD;
+			end
+
+			4'hD: begin message<=8'b00010101;
+			if(avail) count<=4'hE;
+			end
+
+			4'hE: begin message<=8'b00011001;
+				if(avail) count<=4'hF;
+			end
+
+			4'hF: begin message<=8'b00010001;
+				if(avail) spistart<=0;
 			end
 			
 			endcase 
