@@ -118,7 +118,7 @@ module spi_config(
 		end
 		
 		SKZ: begin //dibujar
-			poss_x<=8'h23;
+			poss_x<=8'hA3;
 			poss_y<=8'h42;
 			back<=0;	
 			case(count)
