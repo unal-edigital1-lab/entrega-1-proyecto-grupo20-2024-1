@@ -79,27 +79,17 @@ module spi_config(
 	case(state) 
 		INIT:begin //configuracion 
 			case(count)
-			4'h0:begin  spistart<=1;	comm<=0; 
-			if (avail) count<=4'h1;
-			end
+			4'h0:begin  spistart<=1;	comm<=0; if (avail) count<=4'h1; end
+				
+			4'h1: begin message<=8'b00100001;if (avail) count<=4'h2; end
 			
-			4'h1: begin message<=8'b00100001;
-			if (avail) count<=4'h2;
-			end
+			4'h2:begin  message<=8'b10010000; if (avail) count<=4'h3; end
+			 
+			4'h3: begin message<=8'b00100000; if(avail) count<=4'h4; end
 			
-			4'h2:begin  message<=8'b10010000;	 
-			if (avail) count<=4'h3;
-			end
+			4'h4: begin message<=8'b00001100; if(avail) count<=4'h5; end
 			
-			4'h3: begin message<=8'b00100000; 
-			if(avail) count<=4'h4;
-			end
-			
-			4'h4: begin	message<=8'b00001100; 
-			if(avail) count<=4'h5;
-			end
-			
-			4'h5: begin	 comm<=1; message<=8'h0; //limpia la pantalla
+			4'h5: begin comm<=1; message<=8'h0; //limpia la pantalla
 			if(avail) begin 
 				if (i<=503) begin 
 					i<=i+1;
@@ -134,7 +124,7 @@ module spi_config(
 			if(avail) count<=4'h3;
 			end
 			
-				4'h3: begin comm<=0; poss_x<= poss_x+4; message<=poss_x; //+4 en x (en dec y hexa)
+			4'h3: begin comm<=0; poss_x<= poss_x+4; message<=poss_x; //+4 en x (en dec y hexa)
 			if(avail) count<=4'h4;
 			end
 			
@@ -150,13 +140,9 @@ module spi_config(
 			if(avail) count<=4'h7;
 			end
 			
-			4'h7: begin comm<=1;	message<=8'h1;
-			if(avail) count<=4'h8;
-			end
+			4'h7: begin comm<=1;	message<=8'h1; if(avail) count<=4'h8; end
 			
-			4'h8: begin message<=8'h2;
-			if(avail) count<=4'h9;
-			end
+			4'h8: begin message<=8'h2; if(avail) count<=4'h9; end
 			
 			4'h9: begin message<=8'h4;
 			if(avail)
@@ -167,13 +153,9 @@ module spi_config(
 				else count<=4'hA;
 			end
 			
-			4'hA: begin message<=8'h2;
-			if(avail) count<=4'hB;
-			end
+			4'hA: begin message<=8'h2; if(avail) count<=4'hB; end
 			
-			4'hB: begin message<=8'h1;
-			if(avail) spistart=0;
-			end
+			4'hB: begin message<=8'h1; if(avail) spistart=0; end
 			
 			endcase 
 		end
