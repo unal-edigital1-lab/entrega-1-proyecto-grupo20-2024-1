@@ -184,30 +184,33 @@ module spi_config(
           if(i==1)   count<=4'hA;
           if(i==2) count<=4'h9;
         end
-			end
+	end
 
-			4'hB: begin message<=8'h00011111; i<=0;
-        if(avail) count<=4'hC;
-			end
-
-      4'hC: begin comm<=0;	poss_x<= poss_x+5; message<=poss_x;
-        if(avail) count<=4'hD;
-			end
+      4'hB: begin comm<=0;	poss_x<= poss_x+5; message<=poss_x;
+	 if(avail) count<=4'hC;
+	end
         
-        4'hD: begin message<=8'h00000001;i<=i+1;
+        4'hC: begin message<=8'h00000001;i<=i+1;
         if(avail) begin
-          if(i==1)   count<=4'hD;
-        else count<=4'hE;
+		if(i==1)   count<=4'hC;
+        else count<=4'hD;
         end
-			end
+	end
 
-        4'hE: begin comm<=0; poss_x<=8'hA1; message<=poss_x;  
-			if(avail) count<=4'h6;
-			end
+        4'hD: begin comm<=0; poss_x<=8'hA1; message<=poss_x;  
+		if(avail) count<=4'hE;
+	end
 			
-			4'h6: begin poss_y<=poss_y-1; message<=poss_y; i<=0;
-			if(avail) count<=4'h7;
-			end
+	4'hE: begin poss_y<=poss_y-1; message<=poss_y; 
+		if(avail) count<=4'hF;
+	end
+
+	4'hF: begin comm<=1; message<=8'h00011110; if(avail) count<=4'h10; end
+	4'h10: begin  message<=8'h00000011; if(avail) count<=4'h11; end
+	4'h11: begin  message<=8'h00000001; if(avail) count<=4'h12; end
+	4'h12: begin  message<=8'h00011110; if(avail) count<=4'hG; end
+
+	
         
         
 			endcase 
