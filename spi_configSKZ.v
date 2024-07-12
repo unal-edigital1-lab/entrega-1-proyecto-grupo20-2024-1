@@ -18,7 +18,7 @@ ENTRADAS DESDE FPGA
 */
 
 
-module spi_config(
+module spi_configSKZ(
    input clock,
 	input Reset,
 	//salidas reales
@@ -118,7 +118,7 @@ module spi_config(
 			
 			4'h1: begin  message<=poss_y; if(avail) count<=4'h2; end
 			
-			4'h2: begin comm<=1; message<=8'b00001001;//mas entendible en binario
+			4'h2: begin comm<=1; message<=8'b00010010;//mas entendible en binario
 			if(avail) count<=4'h3;
 			end
 			
@@ -126,9 +126,9 @@ module spi_config(
 			
 			4'h4: begin message<=8'b00010101; if(avail) count<=4'h5; end
 			
-			4'h5: begin  message<=8'b00010010;if(avail) count<=4'h6;end
+			4'h5: begin  message<=8'b00001001;if(avail) count<=4'h6;end
 			
-			4'h6: begin comm<=0; poss_x<=poss_x+5; message<=poss_x; if(avail) count<=4'h7; end
+			4'h6: begin comm<=0; poss_x<=poss_x-5; message<=poss_x; if(avail) count<=4'h7; end
 			
 			4'h7: begin comm<=1;	message<=8'b00011111; if(avail) count<=4'h8; end
 			
@@ -138,16 +138,16 @@ module spi_config(
 						
 			4'hA: begin message<=8'b00010001; if(avail) count<=4'hB; end
 			
-			4'hB: begin comm<=0; poss_x<=poss_x+5; message<=poss_x; if(avail) count<=4'hC; end
+			4'hB: begin comm<=0; poss_x<=poss_x-10; message<=poss_x; if(avail) count<=4'hC; end
 
-			4'hC: begin message<=8'b00010011; if(avail) count<=4'hD; end
+			4'hC: begin comm<=1; message<=8'b00011001; if(avail) count<=4'hD; end
 			
 			4'hD: begin message<=8'b00010101; if(avail) count<=4'hE; end
 			
-			4'hE: begin message<=8'b00011001; if(avail) count<=4'hF;end
+			4'hE: begin message<=8'b00010011; if(avail) count<=4'hF;end
 			
 			4'hF: begin message<=8'b00010001; if(avail) spistart<=0; end
-
+			
 			endcase 
 		end
 	endcase

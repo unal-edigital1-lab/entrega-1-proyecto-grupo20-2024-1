@@ -18,7 +18,7 @@ ENTRADAS DESDE FPGA
 */
 
 
-module spi_config(
+module spi_configHappy(
    input clock,
 	input Reset,
 	//salidas reales
@@ -79,11 +79,11 @@ module spi_config(
 	case(state) 
 		INIT:begin //configuracion 
 			case(count)
-			4'h0:begin  spistart<=1;	comm<=0; if (avail) count<=4'h1; end
+			4'h0: begin spistart<=1; comm<=0; if (avail) count<=4'h1; end
 				
-			4'h1: begin message<=8'b00100001;if (avail) count<=4'h2; end
+			4'h1: begin message<=8'b00100001; if (avail) count<=4'h2; end
 			
-			4'h2:begin  message<=8'b10010000; if (avail) count<=4'h3; end
+			4'h2: begin message<=8'b10010000; if (avail) count<=4'h3; end
 			 
 			4'h3: begin message<=8'b00100000; if(avail) count<=4'h4; end
 			
@@ -94,14 +94,13 @@ module spi_config(
 				if (i<=503) begin 
 					i<=i+1;
 					count<=4'h5;
-					end 
-				else 
-				begin 
-				state<=4'h1;
-				count<=4'h0;
-				i<=0;
+				end 
+				else begin 
+					state<=4'h1;
+					count<=4'h0;
+					i<=0;
 				end
-				end
+			end
 			end			
 			
 			endcase
@@ -111,8 +110,9 @@ module spi_config(
 			poss_x<=8'hA8;
 			poss_y<=8'h42;
 			back<=0;	
+			
 			case(count)
-				4'h0: begin comm<=0; message<=poss_x;//cambia direccion en x 128 +40 (168 dec)
+			4'h0: begin comm<=0; message<=poss_x;//cambia direccion en x 128 +40 (168 dec)
 			if(avail) count<=4'h1;
 			end
 			
@@ -145,12 +145,13 @@ module spi_config(
 			4'h8: begin message<=8'h2; if(avail) count<=4'h9; end
 			
 			4'h9: begin message<=8'h4;
-			if(avail)
+			if(avail) begin
 				if (i < 5) begin 
 					count<=4'h9;
 					i<=i+1;
 				end
 				else count<=4'hA;
+			end
 			end
 			
 			4'hA: begin message<=8'h2; if(avail) count<=4'hB; end

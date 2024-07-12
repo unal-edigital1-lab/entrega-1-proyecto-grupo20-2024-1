@@ -10,10 +10,9 @@ module spi_test_config;
 	 wire dc;
     wire sclk;
     wire sce;
-	 wire [2:0] test;
 	 wire [7:0] message;
 	 
-	 spi_config uut(
+	 spi_configBunny uut(
 		.clock(clk),
 		.Reset(reset),
 
@@ -21,7 +20,6 @@ module spi_test_config;
 		.sclk(sclk),
 		.sce(sce),
 		.dc(dc),
-		.test(test),
 		.message(message)
 	);
 	
@@ -32,15 +30,15 @@ module spi_test_config;
     end
 	 
 	initial begin
-		reset=1; //se presiona reset primero para reinicializar todo
+		reset=0; //se presiona reset primero para reinicializar todo
 		#200;
-		reset=0;
+		reset=1;
 		
 		//$display("mosi %d", mosi);
 		
-		//#10000; 
-		#8000;
-		$stop;
+		
+		//#10000;
+		//$stop;
 
 	end
 	
