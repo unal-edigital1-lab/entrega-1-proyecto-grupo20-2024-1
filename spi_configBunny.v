@@ -51,7 +51,7 @@ module spi_configBunny(
 	
 	reg [8:0] i=0;
 	reg [7:0] j=0;
-	assign freq_div=25;//25000000;//25000 freq deseada 1k (max 4M)div_factor 
+	assign freq_div=25000000;//25000 freq deseada 1k (max 4M)div_factor 
 	
 
 	spi_master Spi_Master (
@@ -148,7 +148,8 @@ module spi_configBunny(
 				else count<=4'h4;
 			end
 			end	
-			
+			 
+		
 			//-----
 			
 			4'h6: begin comm<=0; poss_x<=8'hA1; message<=poss_x; if(avail) count<=4'h7; end
@@ -188,15 +189,17 @@ module spi_configBunny(
 			4'h12: begin  message<=8'b11100010; if(avail) count<=4'h13; end
 			4'h13: begin  message<=8'b00100100; if(avail) count<=4'h14; end
 			4'h14: begin  message<=8'b00011000; if(avail) count<=4'h15; end
-
+			
+			
 
 			//------
 			
 			4'h15: begin comm<=0; poss_x<=4'hA5; message<=poss_x;  if(avail) count<=4'h16; end
 			4'h16: begin poss_y<=poss_y-1; message<=poss_y; if(avail) count<=4'h17;end
-			4'h17: begin comm<=1; message<=8'h00000001; if(avail) count<=4'h18; end
-			4'h18: begin  message<=8'h00000011; if(avail) count<=4'h19; end
-			4'h19: begin  message<=8'h00000110;i<=0; j<=0; if(avail) count<=4'h1A; end
+			4'h17: begin comm<=1; message<=8'b00000001; if(avail) count<=4'h18; end
+			4'h18: begin  message<=8'b00000011; if(avail) count<=4'h19; end
+			4'h19: begin  message<=8'b00000110;i<=0; j<=0; if(avail) count<=4'h1A; end
+			
 			
 			4'h1A: begin message<=8'b00001000; 
 			if(avail) begin
