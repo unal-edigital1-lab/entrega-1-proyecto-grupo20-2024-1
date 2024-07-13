@@ -43,15 +43,15 @@ module spi_configBunny(
 	wire busy;
 	wire avail;
 	
-	reg [4:0] state=4'h1;
+	reg [4:0] state=4'h0;
 	reg [4:0] count=4'h0;
 	
 	parameter INIT=4'h0;
 	parameter BUNNY=4'h1;
 	
-	reg [7:0] i=0;
+	reg [8:0] i=0;
 	reg [7:0] j=0;
-	assign freq_div=250;//2500000;//25000 freq deseada 1k (max 4M)div_factor 
+	assign freq_div=25000000;//25000 freq deseada 1k (max 4M)div_factor 
 	
 
 	spi_master Spi_Master (
@@ -92,7 +92,7 @@ module spi_configBunny(
 			
 			4'h5: begin comm<=1; message<=8'h0; //limpia la pantalla
 			if(avail) begin 
-				if (i<=503) begin 
+				if (i<=510) begin 
 					i<=i+1;
 					count<=4'h5;
 					end 
@@ -114,74 +114,87 @@ module spi_configBunny(
 			back<=0;	
 			case(count)
 			
-			4'h0:begin  spistart<=1;	comm<=0; if (avail) count<=4'h2; end
-			//4'h0: begin  comm<=0; message<=poss_x; if(avail) count<=4'h1;end
-			4'h1: begin  message<=poss_y; if(avail) count<=4'h5; end
+			//4'h0:begin  spistart<=1;	comm<=0; if (avail) count<=4'h2; end
+			4'h0: begin  comm<=0; message<=poss_x; if(avail) count<=4'h1;end
+			4'h1: begin  message<=poss_y; if(avail) count<=4'h2; end
 			
-			4'h2: begin comm<=1; message<=8'b00011110; 
+			4'h2: begin comm<=1; message<=8'b1111110; 
 			if(avail) begin 
-				if (i==2) count<=4'h4;
+				if (j==2) count<=4'h6;
 				else count<=4'h3;
 			end
 			end
 			
-			4'h3: begin  message<=8'b00000001;
+			4'h3: begin  message<=8'b10000001;
          if(avail) begin
 				i<=i+1;
             if(i<1) count<=4'h3;
-				else count<=4'h2;
+				else count<=4'h4;
          end
 			end
 			
-			4'h4: begin comm<=0;	poss_x<= poss_x+3; message<=poss_x; i<=0;
-			if(avail) begin
+			4'h4: begin comm<=1; message<=8'b01111110; 
+			if(avail) begin 
+				if (i==2) begin i<=0; count<=4'h3; end
+				else count<=4'h5;
+			end
+			end
+			
+			4'h5: begin comm<=1; message<=8'b001000000 ; 
+			if(avail) begin 
 				j<=j+1;
-				if(j==1)  count<=4'h2;
-            else count<=4'h5;
-         end
+				if (j<1) count<=4'h5;
+				else count<=4'h4;
+			end
 			end
 			
-			//-----
+			4'h6: begin  message<=8'h0; if(avail) spistart<=0; end 
+			
 			/*
-			4'h5: begin comm<=0; poss_x<=8'hA1; message<=poss_x; if(avail) count<=4'h6; end
-			4'h6: begin poss_y<=poss_y-1; message<=poss_y; i<=0; if(avail) count<=4'h7; end
+			//-----
+			
+			4'h6: begin comm<=0; poss_x<=8'hA1; message<=poss_x; if(avail) count<=4'h6; end
+			4'h6: begin poss_y<=poss_y-1; message<=poss_y; i<=1; if(avail) count<=4'h7; end
 			
 			4'h7: begin comm<=1;	message<=8'b00011111;
 			if(avail) begin
-				if(i==2)   count<=4'hB;
+				if(i==3)   count<=4'hB;
 				else count<=4'h8;
 			end
 			end
 			
 			4'h8: begin message<=8'b00000100;
 			if(avail) begin
-			  if(i==2)   count<=4'h7;
+			  if(i==3)   count<=4'h7;
 			  else count<=4'h9;
 			end
 			end
 
 			4'h9: begin message<=8'b00010011; 
 			if(avail) begin
-			  if(i==2)   count<=4'h8;
+			  if(i==3)   count<=4'h8;
 			  else count<=4'hA;
 			end
 			end
 
-			4'hA: begin message<=8'b00000001; i<=i+1;
+			4'hA: begin message<=8'b00000001; 
 			if(avail) begin
+				i<=i+1;
 				if(i==1)   count<=4'hA;
 				if(i==2) count<=4'h9;
 			end
 			end
 
-			4'hB: begin comm<=0;	poss_x<= poss_x+5; message<=poss_x; if(avail) count<=4'hC; end
+			4'hB: begin comm<=0;	poss_x<= poss_x+5; message<=poss_x; i<=1; if(avail) count<=4'hC; end
 			
-			4'hC: begin message<=8'h00010000;i<=i+1;
+			4'hC: begin message<=8'h00010000;
 			if(avail) begin
+				i<=i+1;
 				if(i==1)   count<=4'hC;
 				else count<=4'hD;
 			end
 			end
+			
 
 			//-----
 			
@@ -211,37 +224,38 @@ module spi_configBunny(
 			4'h21: begin  message<=8'h00000001; if(avail) count<=4'h22; end
 			4'h22: begin  message<=8'h00000011; if(avail) count<=4'h23; end
 			4'h23: begin  message<=8'h00000111; if(avail) count<=4'h24; end 
-			4'h24: begin  message<=8'h00001101; i<=0;  if(avail) count<=4'h25; end
+			4'h24: begin  message<=8'h00001101; i<=1;  if(avail) count<=4'h25; end
 
 			4'h25: begin message<=8'b00010000;
 			if(avail) begin
-				if(i==2) count<=4'h29;
+				if(i==3) count<=4'h29;
 				else count<=4'h26;
 			end
 			end
 
 			4'h26: begin message<=8'b00010000;
 			if(avail) begin
-				if(i==2)   count<=4'h25;
+				if(i==3)   count<=4'h25;
 				else count<=4'h27;
 			end
 			end
 
 			4'h27: begin message<=8'b00011100; 
 			if(avail) begin
-				if(i==2)  count<=4'h26;
+				if(i==3)  count<=4'h26;
 				else count<=4'h28;
 			end
 			end
 
-			4'h28: begin message<=8'b00001000; i<=i+1;
+			4'h28: begin message<=8'b00001000; 
 			if(avail) begin
+				i<=i+1;
 				if(i==1) count<=4'h28;
 				if(i==2) count<=4'h27;
 			end
 			end
 
-			4'h29: begin  message<=8'h00001111; if(avail) spistart<=0; end 
+			4'h29: begin  message<=8'b00001111; if(avail) spistart<=0; end 
 */
 			endcase 
 		end
