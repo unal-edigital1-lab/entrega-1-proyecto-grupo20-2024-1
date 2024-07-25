@@ -140,9 +140,7 @@ Inicialmente el Tamagotchi tendrá una serie de estados que reflejaran ciertas n
 
 En esta pantalla se mostrará a la mascota virtual y las diferentes reacciones que pueda llegar a tener dependiendo del nivel de sus estados y las interacciones que se realicen con ella.
 
-Además esta pantalla tiene la opción de variar la "backlight" que se relacionará con el momento día o noche sensado por la fotorresistencia.
-
-(AQUI MOSTRAR SI ALGO COMO SE PODRIAN LLEGAR A VER)
+Además esta pantalla tiene la opción de variar la "backlight" que se relacionará con el momento día o noche.
 
 * LEDS
 
@@ -150,9 +148,14 @@ Los LEDS de 7 segmentos se encargarán de mostrar el nivel de cada uno de los es
 
 * Sensores
 
-    - Sensor Fotorresistencia: dependiendo de si el valor es 1 o 0 se hará de día o de noche para la mascota. En el modo de noche descansara y recuperará su energía dependiendo del tiempo de reposo, en este modo no interactuará con nosotros de ninguna manera hasta que sea el modo de día, donde estará activa y lista para interactuar nuevamente.
-    - Sensor Ultrasonido: dependiendo de si hay un obstaculo o no en el rango de visión del sensor, la mascota lo tomará como un obstaculo a saltar que aumentará su nivel de diversión, permitiendonos simular un juego de saltar con ella.
+    - Sensor Fotorresistencia: cuando se cubra (no sensa luz) la mascota entrará en estado de descanso y recuperará su energía dependiendo del tiempo de reposo, en este modo no interactuará con nosotros de ninguna manera hasta que se descubra (sensa luz nuevamente) donde estará activa y lista para interactuar nuevamente.
+    - Sensor Ultrasonido: dependiendo de si hay un obstaculo o no en el rango de visión del sensor, la mascota lo tomará como un obstaculo a saltar que aumentará su nivel de diversión, permitiendonos simular un juego con ella.
 
+## Mascota 
+
+Se escogió un conejo como el avatar/mascota del tamagotchi y se diseñó usando pixeles para facilitar su ṕosterior implementación en código. 
+
+ [<img src="fig/Bunny.png" width="500" alt="Diseño mascota"/>](fig)
 
 ## Conexión Sistema
 
