@@ -4,20 +4,18 @@ Descripción:
   SPI CONFIG-->      _______________
                     |               |
            clk -----|               |
-           rst -----|               |
- data_in [7:0] -----|               |---- sclk   ----->SPI SLAVE (NOKIA5110)
-         start -----|               |---- mosi
-freq_div[15:0] -----|               |---- miso (NO ESTA DISPONIBLE EN REALIDAD) 
-data_out [7:0] <----|               |---- sce
-          busy <----|               |---- dc
-         avail <----|               |---- rst (pin reset en nokia) 
-		command <-----|_______________|
+         reset -----|               |---- sclk   ----->SPI SLAVE (NOKIA5110)
+ data_in [7:0] -----|               |---- mosi
+         start -----|               |---- busy
+div_factor[15:0]----|               |---- avail
+data_in [7:0]  <----|               |---- sce
+         start <----|               |---- dc
+       command <----|               |---- rst (pin reset en nokia) 
+		    |_______________|
 
 CLK: 		Entrada del reloj del sistema.
 RST: 		Señal de reset que inicializa el módulo.
-
-CLOCK_DIV: Valor para configurar la velocidad de la comunicación SPI.
-
+DIV_FACTOR:  Valor para configurar la velocidad de la comunicación SPI.
 DATA_IN:  Datos que se van a transmitir al esclavo SPI.
 DATA_OUT: Datos recibidos del esclavo.
 
@@ -25,11 +23,11 @@ START: 	Señal que inicia la transmisión de datos.
 BUSY: 	Señal que indica si el módulo está ocupado en una transmisión.
 AVAIL: 	Señal que indica que se ha recibido un dato completo.
 
-MISO: 	Salida del Maestro, Entrada del Esclavo (Master In Slave Out).
+MISO: 	Salida del Maestro, Entrada del Esclavo (Master In Slave Out). (EN REALIDAD NO SE UTILIZA) 
 MOSI: 	Entrada del Maestro, Salida del Esclavo (Master Out Slave In).
 SCLK: 	Señal de reloj SPI que sincroniza la transmisión de datos.
-sce: 		Chip Select, activa o desactiva el esclavo seleccionado.
-DC:     Señal que indica si la entrada es un comando/direccion (0) o un dato de entrada a RAM (1)
+SCE:  Chip Select, activa o desactiva el esclavo seleccionado.
+DC:   Señal que indica si la entrada es un comando/direccion (0) o un dato de entrada a RAM (1)
 
 */
 
@@ -40,15 +38,15 @@ module spi_master(
    input start,              // Inicio de la transmisión
    input [15:0] div_factor,   // Divisor del reloj para la velocidad SPI
    input  miso,          // Master In Slave Out
-	input command,         //Señal que va a dc, se modifica en config por eso se pone como input
-   output reg mosi,               // Master Out Slave In
+   input command,         //Señal que va a DC desde config
+   output reg mosi,           // Master Out Slave In
    output reg sclk,          // Reloj SPI
    output reg sce,            // Chip Select
    output reg [7:0] data_out, // Datos recibidos
    output reg busy,          // Señal de ocupado
    output reg avail,  // Señal de dato recibido
-	output reg dc,     //define si la entrada es un comando o data input
-	output reg rst     //Señal reset a nokia
+   output reg dc,     //Define si la entrada es un comando o data input
+ output reg rst     //Señal reset a nokia
 	);
 
    reg [7:0] shift_reg;
