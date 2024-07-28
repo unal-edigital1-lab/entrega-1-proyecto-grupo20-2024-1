@@ -2,19 +2,15 @@
 Este modulo configura y controla las variables que seran enviadas al spi_ master
 
 ENTRADAS DESDE FPGA
-										_______________
-									  |               |
-(de la fpga, pin)	clock	-----|               |----> clk
-(boton)				Reset	-----|               |---->rst
-									  |       message |----> data_in[7:0] 
-									  |       spistart|----> start 
-									  |       freq    |----> freq_div[15:0]  
-									  |     		      |---- > data_out [7:0](se pone por coherencia pero no sirve xd)
-							        |               |---- > busy
-									  |               |---- >avail
-									  |_______comm____|----> command
-
-
+			      ______________
+			     |              |-----> HACIA PANTALLA
+(de la fpga, pin) clock	-----|              |----> sclk
+   	  (boton) Reset -----|   ________   |---->rst
+                   	     |  | MASTER |  |---->mosi
+		   	     |  |________|  |---->sce
+       		   	     |              |---->dc
+	      		     |______________|---->back 
+			
 */
 
 
@@ -82,13 +78,13 @@ module spi_configBunny(
 			 
 			4'h3: begin message<=8'b00100000; if(avail) count<=4'h4; end
 			
-			4'h4: begin message<=8'b00001100; if(avail) begin count<=4'h0; state<=4'h1; end end
+			4'h4: begin message<=8'b00001100; if(avail) begin count<=4'h5; state<=4'h1; end end
 			endcase
 		end
 
 		CLEAN: begin //limpia la pantalla
 			case(count)
-			4'h0: begin comm<=1; message<=8'h0; 
+			4'h5: begin comm<=1; message<=8'h0; 
 			if(avail) begin 
 				if (i<=510) begin 
 					i<=i+1;
@@ -109,6 +105,7 @@ module spi_configBunny(
 			poss_x<=8'hA1;
 			poss_y<=8'h42;
 			back<=0;	
+			
 			case(count)
 		
 			4'h0: begin  comm<=0; message<=poss_x; if(avail) count<=4'h1;end //posicion inical 
