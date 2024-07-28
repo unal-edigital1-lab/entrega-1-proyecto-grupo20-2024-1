@@ -21,24 +21,20 @@ ENTRADAS DESDE FPGA
 module spi_configBunny(
    input clock,
 	input Reset,
-	//salidas reales
 	output mosi,
 	output sclk,
 	output sce,
 	output dc,
 	output rst,
 	output reg back
-	//output reg [7:0] message
 	);
 	
-	//registros a utilizar/modificar en este modulo
-	reg [7:0] message;
+	reg [7:0] message; //mensaje o comando a enviar 
 	reg spistart; 
-	reg comm;
-	reg [7:0] poss_x;
-	reg [7:0] poss_y;
-  
-	
+	reg comm; //para DC (data/ command) 
+	reg [7:0] poss_x; //posicion en x
+	reg [7:0] poss_y; //posicion en y
+
 	wire [15:0]freq_div;
 	wire busy;
 	wire avail;
@@ -46,12 +42,11 @@ module spi_configBunny(
 	reg [4:0] state=4'h0;
 	reg [4:0] count=4'h0;
 	
-	parameter INIT=4'h0;
-	parameter BUNNY=4'h1;
+	parameter INIT=4'h0, CLEAN=4'h1, BUNNY=4'h2;
 	
 	reg [8:0] i=0;
 	reg [7:0] j=0;
-	assign freq_div=25000000;// 1Hz(max 4M)
+	assign freq_div=25000000;// 1Hz(max 4MHz)
 	
 
 	spi_master Spi_Master (
@@ -77,9 +72,9 @@ module spi_configBunny(
 	back<=1;		
 	
 	case(state) 
-		INIT:begin //configuracion 
+		INIT:begin //configuracion inicial
 			case(count)
-			4'h0:begin  spistart<=1;	comm<=0; if (avail) count<=4'h1; end
+			4'h0:begin  spistart<=1; comm<=0; if (avail) count<=4'h1; end
 				
 			4'h1: begin message<=8'b00100001;if (avail) count<=4'h2; end
 			
@@ -87,9 +82,13 @@ module spi_configBunny(
 			 
 			4'h3: begin message<=8'b00100000; if(avail) count<=4'h4; end
 			
-			4'h4: begin message<=8'b00001100; if(avail) count<=4'h5; end
-			
-			4'h5: begin comm<=1; message<=8'h0; //limpia la pantalla
+			4'h4: begin message<=8'b00001100; if(avail) begin count<=4'h0; state<=4'h1; end end
+			endcase
+		end
+
+		CLEAN: begin //limpia la pantalla
+			case(count)
+			4'h0: begin comm<=1; message<=8'h0; 
 			if(avail) begin 
 				if (i<=510) begin 
 					i<=i+1;
@@ -97,13 +96,12 @@ module spi_configBunny(
 					end 
 				else 
 				begin 
-				state<=4'h1;
-				count<=4'h0;
-				i<=0;
+					state<=4'h2;
+					count<=4'h0;
+					i<=0;
 				end
 				end
 			end			
-			
 			endcase
 		end
 		
@@ -112,12 +110,11 @@ module spi_configBunny(
 			poss_y<=8'h42;
 			back<=0;	
 			case(count)
-			
-			//4'h0:begin  spistart<=1;	comm<=0; if (avail) count<=6'h1A; end
-			4'h0: begin  comm<=0; message<=poss_x; if(avail) count<=4'h1;end
+		
+			4'h0: begin  comm<=0; message<=poss_x; if(avail) count<=4'h1;end //posicion inical 
 			4'h1: begin  message<=poss_y; if(avail) count<=4'h2; end
 			
-			4'h2: begin comm<=1; message<=8'b11111110; 
+			4'h2: begin comm<=1; message<=8'b11111110; //primer renglon
 			if(avail) begin
 				if(j==1) count<= 4'h6;
 				else count<=4'h3;
@@ -125,7 +122,7 @@ module spi_configBunny(
 			end
 			
 			4'h3: begin  message<=8'b10000001;
-         	if(avail) begin 
+         		if(avail) begin 
 				i<=i+1;
 				if(i==0) count<=4'h3;
 				else if(j==1) count<= 4'h2;
@@ -149,7 +146,7 @@ module spi_configBunny(
 			end	
 			 
 		
-			//-----
+			//-----segundo renglon
 			
 			4'h6: begin comm<=0; poss_x<=8'hA1; message<=poss_x; if(avail) count<=4'h7; end
 			4'h7: begin poss_y<=poss_y-1; message<=poss_y; if(avail) count<=4'h8; end
@@ -191,7 +188,7 @@ module spi_configBunny(
 			6'h13: begin  message<=8'b00100100; if(avail) count<=6'h14; end
 			6'h14: begin  message<=8'b00011000; if(avail) count<=6'h15; end
 
-			//------
+			//------tercer renglon
 			
 			6'h15: begin comm<=0; poss_x<=8'hA5; message<=poss_x;  if(avail) count<=6'h16; end
 			6'h16: begin poss_y<=poss_y-2; message<=poss_y; if(avail) count<=6'h17;end
