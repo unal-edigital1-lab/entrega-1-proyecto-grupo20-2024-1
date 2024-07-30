@@ -33,7 +33,7 @@ Este proyecto se centra en la creación de un tamagotchi (mascota virtual) media
 
 ## HC-SR04
 
-    Este es un sensor ultrasónico que tiene una capacidad de detección dentro de un rango entre 0.3 a 3 metros de distancia, y tiene la siguiente descripción de pines[1]. 
+_Este es un sensor ultrasónico que tiene una capacidad de detección dentro de un rango entre 0.3 a 3 metros de distancia, y tiene la siguiente descripción de pines[1]._
 
 * Especificación
 
@@ -59,7 +59,7 @@ Este sensor tiene 4 pines de conexión como se ve en la imagen, donde (de izquie
 
 ## LCD Nokia 5110
 
-    Es una pantalla blanco y negro usada anteriormente en los teléfonos de marca Nokia. Esta se puede utilizar para mostrar caracteres alfanuméricos, dibujar formas e incluso mapas de bits por medio de sus 84*48 pixeles monocromáticos (84 columnas y 48 filas), esto se puede lograr mediante el método de comunicación SPI que acepta esta pantalla.
+_Es una pantalla blanco y negro usada anteriormente en los teléfonos de marca Nokia. Esta se puede utilizar para mostrar caracteres alfanuméricos, dibujar formas e incluso mapas de bits por medio de sus 84*48 pixeles monocromáticos (84 columnas y 48 filas), esto se puede lograr mediante el método de comunicación SPI que acepta esta pantalla._
 
 * Especificaciones
 
@@ -89,7 +89,7 @@ Este sensor tiene 4 pines de conexión como se ve en la imagen, donde (de izquie
 
 ## Fotoresistencia
 
-    Es una resistencia que varía en función de la luz que incide sobre su superficie, cuanto mayor sea la intensidad de la luz que incide en la superficie del LDR menor será su resistencia y cuanta menos luz incida mayor será su resistencia. Para nuestro caso esto se traducirá como un 1 y un 0 dependiendo de que no supere cierto nivel de luz en su superficie.
+_Es una resistencia que varía en función de la luz que incide sobre su superficie, cuanto mayor sea la intensidad de la luz que incide en la superficie del LDR menor será su resistencia y cuanta menos luz incida mayor será su resistencia. Para nuestro caso esto se traducirá como un 1 y un 0 dependiendo de que no supere cierto nivel de luz en su superficie._
 
 * Especificaciones
 
@@ -108,7 +108,7 @@ Este sensor tiene 4 pines de conexión como se ve en la imagen, donde (de izquie
 
 ## LEDS 7 Segmentos
 
-    Es un dispositivo opto-electrónico que permite visualizar números y/o letras dependiendo de lo que se requiera. De estos existen 2 tipos, el de ánodo común y el de cátodo común y como están construidos con diodos LED requiere una corriente máxima.Su estructura es estándar en cuanto al nombre de los segmentos, donde a cada uno se le asigna una letra de la "a" a la "g" como se muestra a continuación:
+_Es un dispositivo opto-electrónico que permite visualizar números y/o letras dependiendo de lo que se requiera. De estos existen 2 tipos, el de ánodo común y el de cátodo común y como están construidos con diodos LED requiere una corriente máxima.Su estructura es estándar en cuanto al nombre de los segmentos, donde a cada uno se le asigna una letra de la "a" a la "g" como se muestra a continuación:_
 
 * Especificaciones
 
