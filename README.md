@@ -141,7 +141,7 @@ Se escogió un conejo como el avatar/mascota del tamagotchi y se diseñó usando
 
 ## Caja Negra General
 
-[<img src="fig/CAJA NEGRA DEFINITIVA.jpeg" width="400" alt="Diseño mascota"/>](fig)
+[<img src="fig/CAJA NEGRA DEFINITIVA.jpeg" width="800" alt="Diseño mascota"/>](fig)
 
 
 
