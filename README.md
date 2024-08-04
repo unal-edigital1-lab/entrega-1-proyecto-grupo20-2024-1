@@ -79,58 +79,41 @@ _Es una pantalla blanco y negro usada anteriormente en los teléfonos de marca N
 
 
 
-* Descripción Funcional
+* Descripción Funcional 
 
+En esta pantalla se mostrará a la mascota virtual así como las diferentes reacciones que pueda llegar a tener dependiendo del nivel de sus estados y las interacciones que se realicen con ella. Además esta pantalla tiene la opción de variar la "backlight" que se relacionará con el periodo de día o noche.
+
+La pantalla LCD Nokia 5110 tiene un área de visualización adecuada para el tamagotchi, lo que permite mostrar más contenido simultáneamente y permitirá una interfaz de usuario más intuitiva y con mayor información al mostrar los niveles de estado en pantalla directamente.
 
 * Sistema de Caja Negra
 
 [<img src="fig/Pantalla.jpg" width="400" alt="Pines Sensor ultrasónico"/>](fig)
 
 
-## Fotoresistencia
+## Sensor de luz con fotorresistencia
 
-_Es una resistencia que varía en función de la luz que incide sobre su superficie, cuanto mayor sea la intensidad de la luz que incide en la superficie del LDR menor será su resistencia y cuanta menos luz incida mayor será su resistencia. Para nuestro caso esto se traducirá como un 1 y un 0 dependiendo de que no supere cierto nivel de luz en su superficie._
+_La fotorresistencia una resistencia que varía en función de la luz que incide sobre su superficie, cuanto mayor sea la intensidad de la luz que incide en la superficie del LDR menor será su resistencia y cuanta menos luz incida mayor será su resistencia. El voltaje de salida digital es un “0” lógico cuando la intensidad de luz excede el valor fijado por el potenciómetro y es un “1” lógico cuando sucede lo contrario. El voltaje de salida analógico simplemente aumenta o disminuye de acuerdo al aumento o disminución de intensidad de luz, respectivamente._
 
 * Especificaciones
 
     * Detalles
-        - Fabricado en semiconductor de alta resistencia
+        - Voltaje de alimentación DC: 3.3V a 5V
+        - Utiliza el integrado LM393
+        - Utiliza Fotoresistencia GL5528
         - En la oscuridad, resistencia varia entre 1MΩ; bajo alta intensidad de luz, resistencia varia entre 100Ω
         - Cambio de intensidad luminica tiene una respuesta de una décima de segundo
-        - De muy bajo costo y tecnología sencilla
+        - Salida: Digital y Analógica
+        - Sensibilidad ajustable con potenciómetro
 
 * Descripción Funcional
 
+Se usará un sensor de luz para determinar cuando la mascota podrá descansar. Siempre que el sensor detecte luz se podrá realizar el resto de funciones con normalidad menos la de descansar o dormir y cuando el sensor no detecte luz este enviara una señal para que la mascota virtual pueda descansar y así reponer su nivel de energía con el tiempo.
 
 * Sistema de Caja Negra
 
 [<img src="fig/Fotores.jpg" width="400" alt="Pines Sensor ultrasónico"/>](fig)
 
-## LEDS 7 Segmentos
 
-_Es un dispositivo opto-electrónico que permite visualizar números y/o letras dependiendo de lo que se requiera. De estos existen 2 tipos, el de ánodo común y el de cátodo común y como están construidos con diodos LED requiere una corriente máxima.Su estructura es estándar en cuanto al nombre de los segmentos, donde a cada uno se le asigna una letra de la "a" a la "g" como se muestra a continuación:_
-
-* Especificaciones
-
-    * Detalles
-        - Voltaje de Operación Típico: 5V con el uso de Resistencias de 120 Ω.
-        - Corriente de consumo por segmento: 20 mA.
-        - Polaridad: Ánodo y Cátodo Común.
-        - Tamaño del Display: 14 mm.
-        - Color: Rojo.
-        - Dimensiones: 12.6 mm x 19 mm x 8 mm
-    
-
-    [<img src="fig/Display-7-segmentos.jpg" width="200" alt="LED 7 segmentos"/>](fig)
-
-Este funciona al activar y desactivar cada uno de los leds, formando lo que se desea visualizar al apagar y prender cada uno de los leds.
-
-* Descripción Funcional
-
-
-* Sistema de Caja Negra
-
-[<img src="fig/Led7Seg.jpg" width="400" alt="Pines Sensor ultrasónico"/>](fig)
 
 # Arquitectura del Sistema
 
@@ -176,8 +159,6 @@ Inicialmente el Tamagotchi tendrá una serie de estados que reflejaran ciertas n
 
   * Además esta pantalla tiene la opción de variar la "backlight" que se relacionará con el periodo de día o noche.
 
-* LEDS
-  * Los LEDS de 7 segmentos se encargarán de mostrar el nivel de cada uno de los estados con un valor que variará entre 1 y 8. Siendo 8 el estado óptimo y 1 el estado pésimo.
 
 
 ## Mascota 
