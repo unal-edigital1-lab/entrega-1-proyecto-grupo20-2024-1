@@ -73,7 +73,7 @@ La pantalla LCD Nokia 5110 tiene un área de visualización adecuada para el tam
 
 * Sistema de Caja Negra
 
-[<img src="fig/CAJA NEGRA LCD.jpg" width="400" alt="Pines Sensor ultrasónico"/>](fig)
+[<img src="fig/CAJA NEGRA LCD.jpeg" width="500" alt="Pines Sensor ultrasónico"/>](fig)
 
 
 ## Sensor de luz con Fotorresistencia
@@ -97,7 +97,7 @@ Se usará un sensor de luz para determinar cuando la mascota podrá descansar. S
 
 * Sistema de Caja Negra
 
-[<img src="fig/CAJA NEGRA FOTO.jpg" width="400" alt="Pines Sensor ultrasónico"/>](fig)
+[<img src="fig/CAJA NEGRA FOTO.jpeg" width="400" alt="Pines Sensor ultrasónico"/>](fig)
 
 
 # Arquitectura del Sistema
@@ -141,7 +141,7 @@ Se escogió un conejo como el avatar/mascota del tamagotchi y se diseñó usando
 
 ## Caja Negra General
 
-[<img src="fig/CAJA NEGRA DEFINITIVA.png" width="300" alt="Diseño mascota"/>](fig)
+[<img src="fig/CAJA NEGRA DEFINITIVA.jpeg" width="400" alt="Diseño mascota"/>](fig)
 
 
 
