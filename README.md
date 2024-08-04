@@ -5,33 +5,17 @@
 * Juan David Gonzalez Muñoz
 * David Santiago Cuellar Lopez
 
-## Contenido [sección de guía eliminar despues]
-Objetivo: Definición periféricos del proyecto y diseño inicial.
-
-Esperado:
-
-* Especificación detallada del sistema (Completo).
-    - a) Detalle de la especificación de los componentes del proyecto, su descripción funcional y sistema de caja negra.
-    - b) Uso de un lenguaje adecuado para describir el sistema.
-    - c) Utilización de diagramas de conexión claros para describir cada módulo y especificar los bloques funcionales en HW.
-
-* Plan inicial de la arquitectura del sistema (Solo a y b).
-    - a) Definición clara de la funcionalidad de cada periférico y coherencia con la implementación en HDL y su conexión.
-    - b) Capacidad para decidir la arquitectura más adecuada del proyecto y replanteamiento de modelos.
-* Documentación inicial en el repositorio de Git (a y b).
-    - a) Consolidación de la documentación en un repositorio de Git, incluyendo texto, imágenes y videos de los criterios anteriormente expuestos.
-    - b) Organización clara y estructurada de la documentación, facilitando la comprensión del proyecto y el seguimiento del proceso.
 
 ***
 ## Introducción
 
-Este proyecto se centra en la creación de un tamagotchi (mascota virtual) mediante el uso de una FPGA y diversos componentes que mejoren la visualización e interacción con el hardware que se va a crear. Se tiene planeado inicialmente utilizar una pantalla LCD de Nokia, además de los leds integrados en la tarjeta, para la visualización de la mascota y sus estados. Junto con esto se tienen diversos componentes extra como una fotorresistencia y un sensor de ultrasonido, además de los botones ya integrados en la tarjeta, que serán de ayuda para generar una mayor interacción del usuario con su mascota virtual. Todo será programado en Verilog e implementado por medio de Quartus.
+Este proyecto se centra en la creación de un tamagotchi (mascota virtual) mediante el uso de una FPGA y diversos componentes que mejoren la visualización e interacción con el hardware que se va a crear. Se tiene planeado inicialmente utilizar una pantalla LCD de Nokia para la visualización de la mascota y sus estados, junto con esto se tienen diversos componentes extra como una fotorresistencia y un sensor de ultrasonido, además de los botones ya integrados en la tarjeta, que serán de ayuda para generar una mayor interacción del usuario con su mascota virtual. Todo será programado en Verilog e implementado por medio de Quartus.
 
 
 ***
 # Componentes
 
-## HC-SR04
+## Sensor de ultrasonido HC-SR04
 
 _Este es un sensor ultrasónico que tiene una capacidad de detección dentro de un rango entre 0.3 a 3 metros de distancia, y tiene la siguiente descripción de pines[1]._
 
@@ -50,14 +34,16 @@ _Este es un sensor ultrasónico que tiene una capacidad de detección dentro de 
 Este sensor tiene 4 pines de conexión como se ve en la imagen, donde (de izquierda a derecha) 1 es VCC (power cathode), 2 es la entrada, 3 es la salida proporcional a la distancia (ECHO) y 4 es ground (power anode).
 
 * Descripción Funcional
+A fin de crear una experiencia de usuario más inmersiva, se buscará integrar el tamagotchi con el entorno real inicialmente por medio del sensor de ultraosonido  HCRS04, con el cual el tamagotchi podrá jugar interpretando las proximidades como obstáculos por los cuales tiene que saltar, permitiendo simular un juego con la mascota y asi aumentar su nivel de diversión. 
 
+Con el fin de desarrollar esto, se utiliza el contador de la FPGA para generar un pulso de duración específica (típicamente de 10 microsegundos) en el pin Trigger, posteriormente, aunque no de forma inmediata, el pin Echo se mantiene en alto mientras el sensor está recibiendo el eco. El ancho de pulso de esta señal es proporcional a la distancia al objeto.
 
 * Sistema de Caja Negra
 
-[<img src="fig/Proximidad.jpg" width="400" alt="Pines Sensor ultrasónico"/>](fig)
+[<img src="fig/CAJA NEGRA ULTRA.jpeg" width="400" alt="Pines Sensor ultrasónico"/>](fig)
 
 
-## LCD Nokia 5110
+## Pantalla LCD Nokia 5110
 
 _Es una pantalla blanco y negro usada anteriormente en los teléfonos de marca Nokia. Esta se puede utilizar para mostrar caracteres alfanuméricos, dibujar formas e incluso mapas de bits por medio de sus 84*48 pixeles monocromáticos (84 columnas y 48 filas), esto se puede lograr mediante el método de comunicación SPI que acepta esta pantalla._
 
@@ -87,10 +73,10 @@ La pantalla LCD Nokia 5110 tiene un área de visualización adecuada para el tam
 
 * Sistema de Caja Negra
 
-[<img src="fig/Pantalla.jpg" width="400" alt="Pines Sensor ultrasónico"/>](fig)
+[<img src="fig/CAJA NEGRA LCD.jpg" width="400" alt="Pines Sensor ultrasónico"/>](fig)
 
 
-## Sensor de luz con fotorresistencia
+## Sensor de luz con Fotorresistencia
 
 _La fotorresistencia una resistencia que varía en función de la luz que incide sobre su superficie, cuanto mayor sea la intensidad de la luz que incide en la superficie del LDR menor será su resistencia y cuanta menos luz incida mayor será su resistencia. El voltaje de salida digital es un “0” lógico cuando la intensidad de luz excede el valor fijado por el potenciómetro y es un “1” lógico cuando sucede lo contrario. El voltaje de salida analógico simplemente aumenta o disminuye de acuerdo al aumento o disminución de intensidad de luz, respectivamente._
 
@@ -111,8 +97,7 @@ Se usará un sensor de luz para determinar cuando la mascota podrá descansar. S
 
 * Sistema de Caja Negra
 
-[<img src="fig/Fotores.jpg" width="400" alt="Pines Sensor ultrasónico"/>](fig)
-
+[<img src="fig/CAJA NEGRA FOTO.jpg" width="400" alt="Pines Sensor ultrasónico"/>](fig)
 
 
 # Arquitectura del Sistema
@@ -147,25 +132,18 @@ Inicialmente el Tamagotchi tendrá una serie de estados que reflejaran ciertas n
     - Botón de Interacción (a): Alimentar a la mascota aumenta su estado de Hambre, pueden haber varios alimentos y algunos de ellos pueden estar contaminados, disminuyendo el estado de Salud.
     - Botón de Interacción (b): Curar a la mascota aumenta su estado de Salud y evita el empeoramiento de los demas estados.
 
-* Sensores
-
-    - Sensor Fotorresistencia: cuando se cubra el sensor (no sensa luz) la mascota entrará en estado de descanso.
-      - El estado de descanso permitirá aumental el estado de Energía dependiendo del tiempo en estado de descanso. 
-      - En el estado de descanso la mascosta no interactuará con nosotros de ninguna manera hasta que se descubra el sensor (sensa luz nuevamente) donde estará lista para interactuar nuevamente.
-    - Sensor Ultrasonido: dependiendo de si hay un obstaculo o no en el rango de visión del sensor, la mascota lo tomará como un obstaculo a saltar que aumentará su estado de Diversión, permitiendonos simular un juego con la mascota.
-
-* Pantalla LCD
-  * En esta pantalla se mostrará a la mascota virtual y las diferentes reacciones que pueda llegar a tener dependiendo del nivel de sus estados y las interacciones que se realicen con ella.
-
-  * Además esta pantalla tiene la opción de variar la "backlight" que se relacionará con el periodo de día o noche.
-
-
-
-## Mascota 
+### Mascota
 
 Se escogió un conejo como el avatar/mascota del tamagotchi y se diseñó usando pixeles para facilitar su ṕosterior implementación en código. Este es el diseño principal y sobre el cual se basaran las interacciones de la mascota.
 
  [<img src="fig/Bunny.png" width="300" alt="Diseño mascota"/>](fig)
+
+
+## Caja Negra General
+
+[<img src="fig/CAJA NEGRA DEFINITIVA.png" width="300" alt="Diseño mascota"/>](fig)
+
+
 
 
 
