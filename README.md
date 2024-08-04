@@ -184,7 +184,7 @@ Inicialmente el Tamagotchi tendrá una serie de estados que reflejaran ciertas n
 
 Se escogió un conejo como el avatar/mascota del tamagotchi y se diseñó usando pixeles para facilitar su ṕosterior implementación en código. Este es el diseño principal y sobre el cual se basaran las interacciones de la mascota.
 
- [<img src="fig/Bunny.png" width="500" alt="Diseño mascota"/>](fig)
+ [<img src="fig/Bunny.png" width="300" alt="Diseño mascota"/>](fig)
 
 
 
@@ -195,8 +195,4 @@ Se escogió un conejo como el avatar/mascota del tamagotchi y se diseñó usando
 
 [3]Philips Semiconductors, “PCD8544 Datasheet ,” *Sigma Electronica*, Abr. 12, 1999. https://www.sigmaelectronica.net/manuals/NOKIA%205110.pdf 
 
-https://ferretronica.com/products/sensor-de-movimiento-pir-hc-sr501
-
-https://www.sigmaelectronica.net/producto/nokia-5110/
-
-http://ceca.uaeh.edu.mx/informatica/oas_final/red4_arduino/fotorresistencia.html
+[4] UAEH, “Fotorresistencia ,” *Arduino UAEH*, 2021. http://ceca.uaeh.edu.mx/informatica/oas_final/red4_arduino/fotorresistencia.html
