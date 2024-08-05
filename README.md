@@ -13,9 +13,9 @@ Este proyecto se centra en la creación de un tamagotchi (mascota virtual) media
 
 
 ***
-# Componentes
+## Componentes
 
-## Sensor de ultrasonido HC-SR04
+### Sensor de ultrasonido HC-SR04
 
 _Este es un sensor ultrasónico que tiene una capacidad de detección dentro de un rango entre 0.3 a 3 metros de distancia, y tiene la siguiente descripción de pines[1]._
 
@@ -40,10 +40,10 @@ Con el fin de desarrollar esto, se utiliza el contador de la FPGA para generar u
 
 * Sistema de Caja Negra
 
-[<img src="fig/CAJA NEGRA ULTRA.jpeg" width="400" alt="Pines Sensor ultrasónico"/>](fig)
+[<img src="fig/CAJA NEGRA ULTRA.jpeg" width="400" alt="Sensor ultrasónico"/>](fig)
 
 
-## Pantalla LCD Nokia 5110
+### Pantalla LCD Nokia 5110
 
 _Es una pantalla blanco y negro usada anteriormente en los teléfonos de marca Nokia. Esta se puede utilizar para mostrar caracteres alfanuméricos, dibujar formas e incluso mapas de bits por medio de sus 84*48 pixeles monocromáticos (84 columnas y 48 filas), esto se puede lograr mediante el método de comunicación SPI que acepta esta pantalla._
 
@@ -73,10 +73,10 @@ La pantalla LCD Nokia 5110 tiene un área de visualización adecuada para el tam
 
 * Sistema de Caja Negra
 
-[<img src="fig/CAJA NEGRA LCD.jpeg" width="500" alt="Pines Sensor ultrasónico"/>](fig)
+[<img src="fig/CAJA NEGRA LCD.jpeg" width="500" alt="CAJA NEGRA LCD"/>](fig)
 
 
-## Sensor de luz con Fotorresistencia
+### Sensor de luz con Fotorresistencia
 
 _La fotorresistencia una resistencia que varía en función de la luz que incide sobre su superficie, cuanto mayor sea la intensidad de la luz que incide en la superficie del LDR menor será su resistencia y cuanta menos luz incida mayor será su resistencia. El voltaje de salida digital es un “0” lógico cuando la intensidad de luz excede el valor fijado por el potenciómetro y es un “1” lógico cuando sucede lo contrario. El voltaje de salida analógico simplemente aumenta o disminuye de acuerdo al aumento o disminución de intensidad de luz, respectivamente._
 
@@ -91,16 +91,26 @@ _La fotorresistencia una resistencia que varía en función de la luz que incide
         - Salida: Digital y Analógica
         - Sensibilidad ajustable con potenciómetro
 
+[<img src="fig/modulo-sensor-ldr.jpg" width="250" alt="Pines Sensor de luz"/>](fig)
+
 * Descripción Funcional
 
 Se usará un sensor de luz para determinar cuando la mascota podrá descansar. Siempre que el sensor detecte luz se podrá realizar el resto de funciones con normalidad menos la de descansar o dormir y cuando el sensor no detecte luz este enviara una señal para que la mascota virtual pueda descansar y así reponer su nivel de energía con el tiempo.
 
 * Sistema de Caja Negra
 
-[<img src="fig/CAJA NEGRA FOTO.jpeg" width="400" alt="Pines Sensor ultrasónico"/>](fig)
+[<img src="fig/CAJA NEGRA FOTO.jpeg" width="400" alt="Sensor de luz"/>](fig)
 
 
-# Arquitectura del Sistema
+## Arquitectura del Sistema
+[<img src="fig/Diagrama de flujo (1).jpg" width="500" alt="Diagrama de flujo"/>](fig)
+
+En el diagrama se representan los caminos para los cinco estados: Ánimo, Diversión, Energía, Comida y Salud. Este diagrama muestra los requisitos necesarios para que cada estado cambie de valor, así como los posibles caminos para cada uno, teniendo en cuenta que los estados funcionan en paralelo.
+
+Por ejemplo, después de 30 segundos, la mascota sentirá hambre. En este caso, hay dos opciones: alimentarla repetidamente hasta el máximo de su valor o ignorarla. Si no se alimenta y el estado de Comida llega a un valor de 1, la mascota perderá salud debido a la inanición.
+
+Los casos de insomnio, inanición y depresión son situaciones en las que la mascota pierde puntos de salud, los cuales solo podrán ser recuperados mediante el uso repetido de la acción de curar.
+
 
 ## Funcionamiento
 
@@ -108,7 +118,7 @@ Se usará un sensor de luz para determinar cuando la mascota podrá descansar. S
 
 Inicialmente el Tamagotchi tendrá una serie de estados que reflejaran ciertas necesidades físicas y emocionales, como los siguientes:
 
-* Hambre: Indica la necesidad de alimentar a la mascota. 
+* Comida: Indica la necesidad de alimentar a la mascota. 
   - La falta de atención a esta necesidad puede disminuir el estado de Salud.
 * Diversión: Indica la necesidad de entretenimiento de la mascota. 
   - La inactividad prolongada puede disminuir el estado de Animo.
@@ -129,7 +139,7 @@ Inicialmente el Tamagotchi tendrá una serie de estados que reflejaran ciertas n
 
     - Reset: Reestablece el Tamagotchi a un estado inicial conocido al mantener pulsado el botón durante al menos 5 segundos. Este estado inicial simula el despertar de la mascota con sus estados óptimos.
     -  Test: Activa el modo de prueba al mantener pulsado el botón durante al menos 5 segundos, permitiendo al usuario navegar entre los diferentes estados del Tamagotchi con los botones de interacción.
-    - Botón de Interacción (a): Alimentar a la mascota aumenta su estado de Hambre, pueden haber varios alimentos y algunos de ellos pueden estar contaminados, disminuyendo el estado de Salud.
+    - Botón de Interacción (a): Alimentar a la mascota aumenta su estado de Comida.
     - Botón de Interacción (b): Curar a la mascota aumenta su estado de Salud y evita el empeoramiento de los demas estados.
 
 ### Mascota
@@ -141,7 +151,7 @@ Se escogió un conejo como el avatar/mascota del tamagotchi y se diseñó usando
 
 ## Caja Negra General
 
-[<img src="fig/CAJA NEGRA DEFINITIVA.jpeg" width="800" alt="Diseño mascota"/>](fig)
+[<img src="fig/CAJA NEGRA DEFINITIVA.jpeg" width="800" alt="CAJA NEGRA DEFINITIVA"/>](fig)
 
 
 
