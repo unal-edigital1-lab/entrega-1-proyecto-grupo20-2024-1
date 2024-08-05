@@ -101,9 +101,12 @@ Se usará un sensor de luz para determinar cuando la mascota podrá descansar. S
 
 [<img src="fig/CAJA NEGRA FOTO.jpeg" width="400" alt="Sensor de luz"/>](fig)
 
+## Caja Negra General
+
+[<img src="fig/CAJA NEGRA DEFINITIVA.jpeg" width="800" alt="CAJA NEGRA DEFINITIVA"/>](fig)
 
 ## Arquitectura del Sistema
-[<img src="fig/Diagrama de flujo (1).jpg" width="500" alt="Diagrama de flujo"/>](fig)
+[<img src="fig/Diagrama de flujo (1).jpg" width="1000" alt="Diagrama de flujo"/>](fig)
 
 En el diagrama se representan los caminos para los cinco estados: Ánimo, Diversión, Energía, Comida y Salud. Este diagrama muestra los requisitos necesarios para que cada estado cambie de valor, así como los posibles caminos para cada uno, teniendo en cuenta que los estados funcionan en paralelo.
 
@@ -150,12 +153,6 @@ Los niveles de los estados tendrán una escala de 1 a 5 y se verán reflejados e
 Se escogió un conejo como el avatar/mascota del tamagotchi y se diseñó usando pixeles para facilitar su ṕosterior implementación en código. Este es el diseño principal y sobre el cual se basaran las interacciones de la mascota.
 
  [<img src="fig/Bunny.png" width="300" alt="Diseño mascota"/>](fig)
-
-
-## Caja Negra General
-
-[<img src="fig/CAJA NEGRA DEFINITIVA.jpeg" width="800" alt="CAJA NEGRA DEFINITIVA"/>](fig)
-
 
 
 
