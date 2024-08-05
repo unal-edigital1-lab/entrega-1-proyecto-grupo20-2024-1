@@ -132,6 +132,9 @@ Inicialmente el Tamagotchi tendrá una serie de estados que reflejaran ciertas n
     - Botón de Interacción (a): Alimentar a la mascota aumenta su estado de Hambre, pueden haber varios alimentos y algunos de ellos pueden estar contaminados, disminuyendo el estado de Salud.
     - Botón de Interacción (b): Curar a la mascota aumenta su estado de Salud y evita el empeoramiento de los demas estados.
 
+Los niveles de los estados tendrán una escala de 1 a 5 y se verán reflejados en la pantalla como barras.
+
+
 ### Mascota
 
 Se escogió un conejo como el avatar/mascota del tamagotchi y se diseñó usando pixeles para facilitar su ṕosterior implementación en código. Este es el diseño principal y sobre el cual se basaran las interacciones de la mascota.
