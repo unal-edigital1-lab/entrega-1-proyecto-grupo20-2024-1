@@ -231,8 +231,8 @@ module spi_configBunny(
 		BARS: begin 
 		/* Hambriento: manzana
 		 Descanso: nube 
-		 Diversión: star
 		 Salud: corazon
+		 Diversión: star
 		 Feliz: =) */
 		 
 		
