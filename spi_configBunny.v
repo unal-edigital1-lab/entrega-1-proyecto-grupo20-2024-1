@@ -17,6 +17,7 @@ ENTRADAS DESDE FPGA
 module spi_configBunny(
    input clock,
 	input Reset,
+	input [3:0] draw,
 	output mosi,
 	output sclk,
 	output sce,
@@ -35,15 +36,17 @@ module spi_configBunny(
 	wire busy;
 	wire avail;
 	
-	reg [4:0] state=4'h0;
-	reg [4:0] count=4'h0;
+	reg [4:0] state;
+	reg [6:0] count=4'h0;
 	
-	parameter INIT=4'h0, CLEAN=4'h1, BUNNY=4'h2;
+	parameter INIT=4'h0, CLEAN=4'h1, BUNNY=4'h2, BARS=4'h3 ;
 	
 	reg [8:0] i=0;
 	reg [7:0] j=0;
 	assign freq_div=25000000;// 1Hz(max 4MHz)
 	
+	reg[3:0] comida; //cambiar por una entrada 
+	reg[3:0] food;
 
 	spi_master Spi_Master (
 		.clk(clock),
@@ -222,6 +225,60 @@ module spi_configBunny(
 
 			endcase 
 		end
+		endcase
+		
+		case(draw) 
+		BARS: begin 
+		/* Hambriento: manzana
+		 Descanso: nube 
+		 Diversión: star
+		 Salud: corazon
+		 Feliz: =) */
+		 
+		
+		back<=0;
+		poss_x<=8'h0;
+			poss_y<=8'h0;
+
+			case(count)
+		
+			4'h0: begin  spistart<=1; comm<=0; message<=poss_x; if(avail) count<=4'h1;end //posicion inical 
+			4'h1: begin  message<=poss_y; if(avail) count<=4'h2; end
+			
+			//manzana
+			4'h2: begin  message<=8'b00110000; if(avail) count<=4'h3; end
+			4'h3: begin  message<=8'b01001000; if(avail) count<=4'h4; end
+			4'h4: begin  message<=8'b10000100; if(avail) count<=4'h5; end
+			4'h5: begin  message<=8'b10000010; if(avail) count<=4'h6; end
+			4'h6: begin  message<=8'b10000111; if(avail) count<=4'h7; end
+			4'h7: begin  message<=8'b01001001; if(avail) count<=4'h8; end
+			4'h8: begin  message<=8'b00110000; if(avail) count<=4'h9; end
+			
+			
+			4'h9: begin comida<=3'h3; message<=8'b00111100;
+			food<=comida*2;
+			if(avail) begin
+			if(i<=food)
+			count<=4'h9;
+			else count<=4'hA;
+			end
+			end
+
+			//nube
+			4'hA: begin  comm<=0; poss_x<= poss_x+23; message<=poss_x; if(avail) count<=4'hB;end 
+			
+			4'hB: begin  message<=8'b00110000; if(avail) count<=4'hC; end
+			4'hC: begin  message<=8'b00110000; if(avail) count<=4'hD; end
+			//terminar nube optim
+			
+			4'hD: begin  message<=8'b00000111; if(avail) spistart<=0; end 
+
+			
+		endcase	
+		end
+		
+		
+		
 	endcase
 	end
 	 
