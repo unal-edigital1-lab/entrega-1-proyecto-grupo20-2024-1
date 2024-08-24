@@ -41,9 +41,11 @@ module spi_configBunny(
 	
 	parameter INIT=4'h0, CLEAN=4'h1, PERA=4'h2, NUBE=4'h3, CORAZON=4'h4, LEVER=4'h5, 
 	FELIZ=4'h6, BUNNY=4'h7;
+
+	parameter BAR=4'h0;
 	
 	reg [8:0] i=0;
-	reg [7:0] j=0;
+	reg [8:0] j=0;
 	assign freq_div=25000000;// 1Hz(max 4MHz)
 	
 	reg[3:0] comida; //cambiar por una entrada 
@@ -408,7 +410,38 @@ module spi_configBunny(
 		endcase
 
 	endcase
+
+		case(draw) 
+			BAR: begin
+			count<=4'h0;
+				j<=5;// seria entrada segun nivel 
+			case(count)
+				4'h0: begin  spistart<=1; comm<=0; poss_x<=4'h89; message<=poss_x; if(avail) count<=4'h1;end 
+				4'h1: begin   poss_y<=4'h40; message<=poss_y; if(avail) count<=4'h2;end
+
+				4'h2: begin  comm<=1; message<=8'b01111110; 
+					if(avail) begin 
+						i<=i+1;
+						if(i==1) count<=4'h2;
+						else count<=4'h3;
+						end
+					end
+				4'h3: begin  message<=8'h0; 
+					if(avail) begin 
+						if(j>=0) begin
+							j<=j-1;
+							i<=0;
+							count<=4'h2;
+						end
+						else spistart<=0;
+					end
+					
+			endcase
+			end
+		endcase
+		
 	end
+	
 	 
 endmodule
 	 
