@@ -39,7 +39,8 @@ module spi_configBunny(
 	reg [4:0] state;
 	reg [6:0] count=4'h0;
 	
-	parameter INIT=4'h0, CLEAN=4'h1, BUNNY=4'h2, PERA=4'h3 ;
+	parameter INIT=4'h0, CLEAN=4'h1, PERA=4'h2, NUBE=4'h3, CORAZON=4'h4, LEVER=4'h5, 
+	FELIZ=4'h6, BUNNY=4'h7;
 	
 	reg [8:0] i=0;
 	reg [7:0] j=0;
@@ -103,10 +104,203 @@ module spi_configBunny(
 			end			
 			endcase
 		end
+
+		 /* Hambriento: pera
+		 Descanso: nube 
+		 Salud: corazon
+		 Diversión: lever
+		 Feliz: =) */
+			
+		PERA: begin 
+		back<=0;
+		poss_x<=8'h80;
+		poss_y<=8'h40;
+
+			case(count)
+		
+			4'h0: begin  comm<=0; message<=poss_x; if(avail) count<=4'h1;end //posicion inical 
+			4'h1: begin  message<=poss_y; if(avail) count<=4'h2; end
+			
+			4'h2: begin  comm<=1; message<=8'b00110000; if(avail) count<=4'h3; end
+			4'h3: begin  message<=8'b01001000; if(avail) count<=4'h4; end
+			4'h4: begin  message<=8'b10000100; if(avail) count<=4'h5; end
+			4'h5: begin  message<=8'b10000010; if(avail) count<=4'h6; end
+			4'h6: begin  message<=8'b10000111; if(avail) count<=4'h7; end
+			4'h7: begin  message<=8'b01001001; if(avail) count<=4'h8; end
+			4'h8: begin  message<=8'b00110000; 
+				if(avail) begin
+					state<=4'h3;
+					count<=4'h0;
+				end
+				end
+			endcase	
+		end
+		
+		NUBE: begin
+			case(count)
+				4'h0: begin  comm<=0; poss_x<=4'h9B; message<=poss_x; if(avail) count<=4'h1;end 
+			
+				4'h1: begin  comm<=1; message<=8'b00011000;
+					if(avail) begin 
+						if (i<4) count<=4'h2;
+						else begin 
+						state<=4'h4;
+						count<=4'h0;
+						i<=0;
+						end
+						end
+					end
+				4'h2: begin  message<=8'b00100100; 
+					if(avail) begin 
+						if (i<4) count<=4'h3;
+						else count<=4'h1;
+					end
+				end
+				4'h3: begin  message<=8'b01000010; 
+					if(avail) begin
+						i<=i+1;
+						if (i==1) count<=4'h3;
+						else if (i<4) count<=4'h4;
+						else count<=4'h2;
+					end
+				end
+				
+				
+				4'h4: begin  message<=8'b01000001; 
+					if(avail) begin 
+						i<=i+1;
+						if (i<=4) count<= 4'h4;
+						else count<=4'h3; 
+					end
+				end
+				
+				4'h5: begin  message<=8'b01000001;
+					if(avail) begin
+						i<=i+1;
+						if (i<=3) count<=4'h5;
+						else count<=4'h4;
+					end
+				end
+				
+				
+			
+			
+		endcase	
+		end
+
+		CORAZON: begin
+			case(count)
+				4'h0: begin  comm<=0; poss_x<=4'hB8; message<=poss_x; if(avail) count<=4'h1;end 
+			
+				4'h1: begin comm<=1; message<=8'b00001100; 
+					if(avail) begin
+						if(i>0) begin
+						state<=4'h5;
+						count<=4'h0;
+						i<=0;
+						end							
+						else count<=4'h2; 
+						end
+					end
+				
+				4'h2: begin  message<=8'b00010010; 
+					if(avail) begin
+						if(i>0) count<=4'h1;
+						else count<=4'h3; 
+						end
+					end
+				
+				4'h3: begin  message<=8'b00100001; 
+					if(avail) begin
+						i<=i+1;
+						if (i==1|| i==3;) count<=4'h3;
+						else if (i==2) count<=4'h4;
+						else  count<=4'h2;
+					end
+				end
+				
+				4'h4: begin  message<=8'b10000010; if(avail) count<=4'h3; end
+			
+		endcase	
+		end
+		
+		GAME: begin
+			case(count)
+				4'h0: begin  comm<=0; poss_x<=4'h8D; message<=poss_x; if(avail) count<=4'h1;end 
+				4'h1: begin   poss_y<=4'h41; message<=poss_y; if(avail) count<=4'h2;end
+				
+				4'h2: begin  comm<=1; message<=8'b11100000; 
+					if(avail) begin
+						if(i<2) count<=4'h3; 
+						else begin
+							state<=4'h6;
+						count<=4'h0;
+						i<=0;
+						end
+						end
+					end
+				4'h3: begin  message<=8'b10100000; 
+					if(avail) begin 
+						if(i<2) count<=4'h4; 
+						else count<=4'h2;
+						end
+					end
+				4'h4: begin  message<=8'b10100011;
+					if(avail)begin
+						i<=i+1;
+						if(i==1) count<=4'h5; 
+						else count<=4'h3;
+						end
+					end
+				4'h5: begin  message<=8'b10111111; if(avail) count<=4'h4; end
+				
+			
+			
+		endcase	
+		end
+		FELIZ: begin
+			case(count)
+				4'h0: begin  comm<=0; poss_x<=4'hA6; message<=poss_x; if(avail) count<=4'h1;end
+				
+				4'h1: begin  comm<=1; message<=8'b00010000; 
+					if(avail)begin
+						if(i<2) count<=4'h2; 
+						else begin
+							state<=4'h7;
+						count<=4'h0;
+						i<=0;
+						end
+						end
+					end
+				4'h2: begin  message<=8'b00100000; 
+					if(avail) begin 
+						if(i<2) count<=4'h3; 
+						else count<=4'h1;
+						end
+					end
+				
+				4'h3: begin  message<=8'b01000111; 
+					if(avail) begin 
+						if(i<2) count<=4'h4; 
+						else count<=4'h2;
+						end
+					end
+				4'h4: begin  message<=8'b01000000; 
+					if(avail) begin 
+						i<=i+1;
+						if (i==1) count<=4'h4;
+						else count<=4'h3;
+						end
+					end
+				
+			
+		endcase	
+		end
+
 		
 		BUNNY: begin //dibujar
-			poss_x<=8'hA1;
-			poss_y<=8'h42;
+			poss_x<=8'hA5;
+			poss_y<=8'h43;
 			back<=0;	
 			
 			case(count)
@@ -116,232 +310,103 @@ module spi_configBunny(
 			
 			4'h2: begin comm<=1; message<=8'b11111110; 
 			if(avail) begin
-				if(j==1) count<= 4'h6;
-				else count<=4'h3;
+				if(i<1) count<=4'h3;
+				else begin
+					count<=4'h7;
+				end
+				
 			end
 			end
 			
-			4'h3: begin  message<=8'b10000001;
+			4'h3: begin  message<=8'b001000001;
          		if(avail) begin 
-				i<=i+1;
-				if(i==0) count<=4'h3;
-				else if(j==1) count<= 4'h2;
-				else count<=4'h4;	
+				if(i<1) count<=4'h4;
+				else count<=4'h2;	
 			end
 			end
 			
-			4'h4: begin message<=8'b01111110; 
+			4'h4: begin message<=8'b00010001; 
 			if(avail) begin 
-				if(i==4) begin j<=1; i<=0; count<=4'h3; end
-				else count<=4'h5;	
+				if(i<1) count<=4'h5;
+				else count<=4'h3;	
 			end
 			end
 			
-			4'h5: begin message<=8'b00100000; 
+			4'h5: begin message<=8'b00011110; 
 			if(avail) begin 
-				i<=i+1;
-				if(i==2) count<=4'h5; 
-				else count<=4'h4;
+				if(i<1) count<=4'h6;
+				else count<=4'h4;				
 			end
 			end	
-			 
-		
+
+			4'h6: begin message<=8'b00001000; 
+				if(avail) begin 
+					i<=i+1;
+					if (i==1) count<=4'h6;
+					else count<=4'h5;
+				end
+			end
+
+			4'h7: begin comm<=0; poss_x<=8'hB3; message<=poss_x; if(avail) count<=4'h8; end
+			4'h8: begin comm<=1; message<=8'b01000000; 
+				if(avail) begin
+					i<=i+1;
+					if(i==3) count<=4'h8; 
+					else begin 
+						i<=0;
+						count<=4'h9;
+					end
+					end
+				end
+			
+				
 			//-----segundo renglon
 			
-			4'h6: begin comm<=0; poss_x<=8'hA1; message<=poss_x; if(avail) count<=4'h7; end
-			4'h7: begin poss_y<=poss_y-1; message<=poss_y; if(avail) count<=4'h8; end
-			4'h8: begin comm<=1; message<=8'b00111111; i<=0; j<=0; if(avail) count<=4'h9; end
-			4'h9: begin message<=8'b01100000; if(avail) count<=4'hA; end
-			4'hA: begin message<=8'b11000000; if(avail) count<=6'hB; end
-			
-			6'hB: begin message<=8'b10001110; 
-			if(avail) begin
-				if(i==2) count<=6'hD;
-				else count<=6'hC;
-			end
-			end
+				4'h9: begin comm<=0; poss_x<=8'hA5; message<=poss_x; if(avail) count<=4'hA; end
+				4'hA: begin poss_y<=poss_y+1; message<=poss_y; if(avail) count<=4'hB; end
 
+				4'hB: begin comm<=1; message<=8'b00000111;  if(avail) count<=4'hC; end
+				4'hC: begin message<=8'b00001100; if(avail) count<=4'hD; end
+				4'hD: begin message<=8'b00011000; if(avail) count<=6'hE; end
+				6'hE: begin message<=8'b00010011; if(avail) count<=6'hF; end
+				
+				6'hF: begin  message<=8'b00010000; if(avail) count<=6'h10; end
+				6'h10: begin  message<=8'b00110000; if(avail) count<=6'h11; end
+				6'h11: begin  message<=8'b01010011; if(avail) count<=6'h12; end
 
-			6'hC: begin  message<=8'b10000000;
-         	if(avail) begin 
+			6'h12: begin  message<=8'b10000000;
+         		if(avail) begin 
 				i<=i+1;
-				if(i==0) count<=6'hC;
-				else count<=6'hB;	
-			end
-			end
-
-			6'hD: begin comm<=0; poss_x<= poss_x-9; message<=poss_x; if(avail) count<=6'hE; end
-			6'hE: begin comm<=1;  message<=8'b00001111; i<=0; if(avail) count<=6'hF; end
-
-			6'hF: begin  message<=8'b00001000;
-         	if(avail) begin 
-				i<=i+1;
-				if(i<2) count<=6'hF; 
-				else count<=6'h10;	
+				if(i<2) count<=6'h12; 
+				else count<=6'h13;	
 			end
 			end
 		
-		
-			6'h10: begin  message<=8'b00011100; if(avail) count<=6'h11; end
-			6'h11: begin  message<=8'b00110010; if(avail) count<=6'h12; end
-			6'h12: begin  message<=8'b11100010; if(avail) count<=6'h13; end
-			6'h13: begin  message<=8'b00100100; if(avail) count<=6'h14; end
-			6'h14: begin  message<=8'b00011000; if(avail) count<=6'h15; end
-
-			//------tercer renglon
-			
-			6'h15: begin comm<=0; poss_x<=8'hA5; message<=poss_x;  if(avail) count<=6'h16; end
-			6'h16: begin poss_y<=poss_y-2; message<=poss_y; if(avail) count<=6'h17;end
-			6'h17: begin comm<=1; message<=8'b00000001; if(avail) count<=6'h18; end
-			6'h18: begin  message<=8'b00000011; if(avail) count<=6'h19; end
-			6'h19: begin  message<=8'b00000110;i<=0; j<=0; if(avail) count<=6'h1A; end
-			
-			6'h1A: begin message<=8'b00001000; 
-			if(avail) begin
-				i<=i+1;
-				if(i==0) count<= 6'h1A;
-				else if(j==1) count<=6'h1D;
-				else count<=6'h1B;
-			end
-			end
-			
-			6'h1B: begin  message<=8'b00001110; 
-         	if(avail) begin 
-				if(j==1) begin i<=0; count<=6'h1A; end
-				else count<=6'h1C;	
-			end
-			end
-			
-			6'h1C: begin message<=8'b00000100; 
+			6'h13: begin  message<=8'b11100001; 
 			if(avail) begin 
-				j<=1;
+				if(i<4) count<=6'h14;
+				else count<=6'h15;
+			end
+			end
+				
+			6'h14: begin  message<=8'b01000001; 
+			if(avail) begin 
 				i<=i+1;
-				if(i==2) count<=6'h1C;
-				else count<=6'h1B;
+				if(i==3) count<=6'h14; 
+				else count<=6'h13;	
 			end
 			end
 
-			6'h1D: begin  message<=8'b00000111; if(avail) spistart<=0; end 
-
+				6'h15: begin  message<=8'b10000011; if(avail) count<=6'h16; end
+				6'h16: begin  message<=8'b10000110; if(avail) count<=6'h17; end
+				6'h17: begin  message<=8'b01111100; if(avail) count<=6'h18; end
+				6'h18: begin  message<=8'b00000100; if(avail) count<=6'h19; end
+			6'h19: begin  message<=8'b00000011; if(avail) spistart<=0; end
+				
 			endcase 
 		end
 		endcase
-		
-		case(draw) /* Hambriento: pera
-		 Descanso: nube 
-		 Salud: corazon
-		 Diversión: lever
-		 Feliz: =) */
-			
-		PERA: begin 
 
-		back<=0;
-		poss_x<=8'h80;
-			poss_y<=8'h40;
-
-			case(count)
-		
-			4'h0: begin  spistart<=1; comm<=0; message<=poss_x; if(avail) count<=4'h1;end //posicion inical 
-			4'h1: begin  message<=poss_y; if(avail) count<=4'h2; end
-			
-			//pera
-			4'h2: begin  message<=8'b00110000; if(avail) count<=4'h3; end
-			4'h3: begin  message<=8'b01001000; if(avail) count<=4'h4; end
-			4'h4: begin  message<=8'b10000100; if(avail) count<=4'h5; end
-			4'h5: begin  message<=8'b10000010; if(avail) count<=4'h6; end
-			4'h6: begin  message<=8'b10000111; if(avail) count<=4'h7; end
-			4'h7: begin  message<=8'b01001001; if(avail) count<=4'h8; end
-			4'h8: begin  message<=8'b00110000; if(avail) count<=4'h9; end
-
-			endcase	
-		end
-		
-			/*
-			4'h9: begin comida<=3'h3; message<=8'b00111100;
-			food<=comida*2;
-			if(avail) begin
-			if(i<=food)
-			count<=4'h9;
-			else count<=4'hA;
-			end
-			end  */
-
-		NUBE: begin
-			case(count)
-				4'h0: begin  comm<=0; poss_x<=4'h9B; message<=poss_x; if(avail) count<=4'h1;end 
-			
-				4'h1: begin  message<=8'b00011000; if(avail) count<=4'h2; end
-				4'h2: begin  message<=8'b00100100; if(avail) count<=4'h3; end
-				4'h3: begin  message<=8'b01000010; if(avail) count<=4'h4; end
-				
-				4'h4: begin  message<=8'b01000010; if(avail) count<=4'h5; end
-				4'h5: begin  message<=8'b01000001; if(avail) count<=4'h6; end//x3
-				//3, 2, 1	
-			
-			
-		endcase	
-		end
-
-		CORAZON: begin
-			case(count)
-				4'h0: begin  comm<=0; poss_x<=4'hB8; message<=poss_x; if(avail) count<=4'h1;end 
-			
-				4'h1: begin  message<=8'b00001100; if(avail) count<=4'h2; end
-				4'h2: begin  message<=8'b00010010; if(avail) count<=4'h3; end
-				4'h3: begin  message<=8'b00100001; if(avail) count<=4'h4; end
-				4'h4: begin  message<=8'b01000001; if(avail) count<=4'h5; end
-				4'h5: begin  message<=8'b10000010; if(avail) count<=4'h6; end
-				//repetir bajando
-			
-			
-		endcase	
-		end
-
-			
-		CORAZON: begin
-			case(count)
-				4'h0: begin  comm<=0; poss_x<=4'hB8; message<=poss_x; if(avail) count<=4'h1;end 
-			
-				4'h1: begin  comm<=1; message<=8'b00001100; if(avail) count<=4'h2; end
-				4'h2: begin  message<=8'b00010010; if(avail) count<=4'h3; end
-				4'h3: begin  message<=8'b00100001; if(avail) count<=4'h4; end
-				4'h4: begin  message<=8'b01000001; if(avail) count<=4'h5; end
-				4'h5: begin  message<=8'b10000010; if(avail) count<=4'h6; end
-				//repetir bajando
-			
-			
-		endcase	
-		end
-
-		GAME: begin
-			case(count)
-				4'h0: begin  comm<=0; poss_x<=4'h8D; message<=poss_x; if(avail) count<=4'h1;end 
-				4'h1: begin   poss_y<=4'h41; message<=poss_y; if(avail) count<=4'h2;end
-				
-				4'h2: begin  comm<=1; message<=8'b11100000; if(avail) count<=4'h3; end
-				4'h3: begin  message<=8'b10100000; if(avail) count<=4'h4; end
-				4'h4: begin  message<=8'b10100011; if(avail) count<=4'h5; end
-				4'h5: begin  message<=8'b10111111; if(avail) count<=4'h6; end
-				//repetir de 4 a 2 bajando
-			
-			
-		endcase	
-		end
-		FELIZ: begin
-			case(count)
-				4'h0: begin  comm<=0; poss_x<=4'hA6; message<=poss_x; if(avail) count<=4'h1;end 
-				4'h1: begin  comm<=1; message<=8'b00010000; if(avail) count<=4'h2; end
-				4'h2: begin  message<=8'b00100000; if(avail) count<=4'h3; end
-				4'h3: begin  message<=8'b01000111; if(avail) count<=4'h4; end
-				4'h4: begin  message<=8'b01000000; if(avail) count<=4'h5; end
-				//repetir de 4 a 1 bajando
-			
-		endcase	
-		end
-			
-		
-		
-		
 	endcase
 	end
 	 
