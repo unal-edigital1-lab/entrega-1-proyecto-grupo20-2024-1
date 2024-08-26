@@ -35,7 +35,7 @@ module spi_configBunny(
 	wire busy;
 	wire avail;
 	
-	reg [4:0] state=4'h8;
+	reg [4:0] state=4'h5;
 	reg [6:0] count=4'h0;
 	
 	parameter INIT=4'h0, CLEAN=4'h1, PERA=4'h2, NUBE=4'h3, CORAZON=4'h4, GAME=4'h5, 
@@ -229,7 +229,7 @@ module spi_configBunny(
 		
 		GAME: begin
 			case(count)
-			4'h0: begin  comm<=0; poss_x<=8'h8D; message<=poss_x; if(avail) count<=4'h1;end 
+			4'h0: begin  spistart<=1; comm<=0; poss_x<=8'h8D; message<=poss_x; if(avail) count<=4'h1;end 
 			4'h1: begin   poss_y<=8'h41; message<=poss_y; if(avail) count<=4'h2;end
 			
 			4'h2: begin  comm<=1; message<=8'b11100000; 
@@ -315,7 +315,7 @@ module spi_configBunny(
 				end
 			end
 			
-			4'h3: begin  message<=8'b001000001;
+			4'h3: begin  message<=8'b00100001;
          		if(avail) begin 
 					if(i<1) count<=4'h4;
 					else count<=4'h2;	
@@ -433,14 +433,14 @@ module spi_configBunny(
 			4'h2: begin  comm<=1; message<=8'b01111110; 
 				if(avail) begin 
 					i<=i+1;
-					if(i==1) count<=4'h2;
+					if(i==2) count<=4'h2;//en la practica cambiar a 1 
 					else count<=4'h3;
 				end
 			end
 
 			4'h3: begin  message<=8'h0; 
 				if(avail) begin 
-					if(nivel>0) begin
+					if(nivel>=0) begin
 						nivel<=nivel-1;
 						i<=0;
 						count<=4'h2;
@@ -464,8 +464,6 @@ module spi_configBunny(
 				
 			endcase
 		end
-
-
 
 		
 		endcase

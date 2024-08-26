@@ -4,7 +4,6 @@ module spi_test_config;
 
 	 reg clk;
     reg reset;
-	 reg [3:0]draw;
 	 
     wire mosi;
 
@@ -16,12 +15,10 @@ module spi_test_config;
 	 spi_configBunny uut(
 		.clock(clk),
 		.Reset(reset),
-		.draw(draw),
 		.mosi(mosi),
 		.sclk(sclk),
 		.sce(sce),
-		.dc(dc)
-		
+		.dc(dc)		
 	);
 	
 	initial begin
@@ -34,7 +31,6 @@ module spi_test_config;
 		#200;
 		reset=1;
 		
-		draw<=4'h3;
 		
 	end
 	
