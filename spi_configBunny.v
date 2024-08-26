@@ -35,7 +35,7 @@ module spi_configBunny(
 	wire busy;
 	wire avail;
 	
-	reg [4:0] state=4'h5;
+	reg [4:0] state=4'h8;
 	reg [6:0] count=4'h0;
 	
 	parameter INIT=4'h0, CLEAN=4'h1, PERA=4'h2, NUBE=4'h3, CORAZON=4'h4, GAME=4'h5, 
@@ -425,7 +425,7 @@ module spi_configBunny(
 	//dividir con otro caso para llamar desde core? 
 
 		BARS: begin
-			nivel_hambre<=4'h2;//sera entrada 
+			nivel_hambre<=4'h2;//poner como entrada 
 			case(count)
 			4'h0: begin  spistart<=1; nivel<=nivel_hambre; comm<=0; poss_x<=8'h89; message<=poss_x; if(avail) count<=4'h1;end 
 			4'h1: begin   poss_y<=8'h40; message<=poss_y; if(avail) count<=4'h2;end
@@ -433,14 +433,14 @@ module spi_configBunny(
 			4'h2: begin  comm<=1; message<=8'b01111110; 
 				if(avail) begin 
 					i<=i+1;
-					if(i==2) count<=4'h2;//en la practica cambiar a 1 
+					if(i==0) count<=4'h2;
 					else count<=4'h3;
 				end
 			end
 
 			4'h3: begin  message<=8'h0; 
 				if(avail) begin 
-					if(nivel>=0) begin
+					if(nivel>1) begin
 						nivel<=nivel-1;
 						i<=0;
 						count<=4'h2;
