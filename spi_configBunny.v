@@ -17,6 +17,8 @@ ENTRADAS DESDE FPGA
 module spi_configBunny(
 	input clock,
 	input Reset,
+	input [3:0] nivel_hambre, //maybe probar con switches en fpga 
+	input [3:0] draw,
 	output mosi,
 	output sclk,
 	output sce,
@@ -45,12 +47,11 @@ module spi_configBunny(
 	
 	reg [8:0] i=0;
 	reg [8:0] j=0;
-	reg [8:0] nivel_hambre;
-	reg [8:0] nivel=0;
+	//reg [8:0] nivel_hambre;
+	reg [3:0] nivel=0;
 	assign freq_div=25000000;// 1Hz(max 4MHz)
 	
-	reg[3:0] comida; //cambiar por una entrada 
-	reg[3:0] food;
+	
 
 	spi_master Spi_Master (
 		.clk(clock),
@@ -419,13 +420,14 @@ module spi_configBunny(
 				
 			endcase 
 		end
-		
-	
-	
+		endcase
+
+
+		case(draw)	
 	//dividir con otro caso para llamar desde core, BARS se actualiza desde core no desde aqui so don't worry about it 
 
 		BARS: begin
-			nivel_hambre<=4'h2;//poner como entrada 
+			//nivel_hambre<=4'h2;//poner como entrada 
 			case(count)
 			4'h0: begin  spistart<=1; nivel<=nivel_hambre; comm<=0; poss_x<=8'h89; message<=poss_x; if(avail) count<=4'h1;end 
 			4'h1: begin   poss_y<=8'h40; message<=poss_y; if(avail) count<=4'h2;end
