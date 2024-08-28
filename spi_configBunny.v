@@ -422,7 +422,7 @@ module spi_configBunny(
 		
 	
 	
-	//dividir con otro caso para llamar desde core? 
+	//dividir con otro caso para llamar desde core, BARS se actualiza desde core no desde aqui so don't worry about it 
 
 		BARS: begin
 			nivel_hambre<=4'h2;//poner como entrada 
