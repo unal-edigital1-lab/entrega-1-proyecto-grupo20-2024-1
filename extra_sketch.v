@@ -154,6 +154,7 @@ PART_CLEAN: begin //limpia alrededor del conejo
 		end
 
         
+  
 
 
 
