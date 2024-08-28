@@ -95,10 +95,73 @@ STAR: begin
 		end
 
 
+PART_CLEAN: begin //limpia alrededor del conejo
+			case(count)
+				4'h0: begin  spistart<=1; comm<=0; poss_x<=8'h0; message<=poss_x; if(avail) count<=4'h1;end 
+			4'h1: begin   poss_y<=8'h43; message<=poss_y; if(avail) count<=4'h2;end
+				
+			4'h5: begin comm<=1; message<=8'h0; 
+				if(avail) begin 
+					if (i<=30) begin 
+						i<=i+1;
+						count<=4'h5;
+					end 
+					else begin 
+						j<=j+1;
+						if (j==0) count<=4'h6; 
+						else count<=4'h7; 
+					
+					end
+				end
+			end
 
+				4'h6: begin comm<=0; i<=0; poss_y<=poss_y-1; message<=poss_y; if(avail) count<=4'h5;end
+				
+				4'h7: begin comm<=0;  i<=0; poss_x<=8'hB2; message<=poss_x; if(avail) count<=4'h8;end
+				4'h8: begin   poss_y<=8'h42; message<=poss_y; if(avail) count<=4'h9;end
+				4'h9: begin comm<=1; message<=8'h0; 
+				if(avail) begin 
+					if (i<=14) begin 
+						i<=i+1;
+						count<=4'h9;
+					end
+					else count<=4'hA;
+				end
+				end
+
+				4'hA: begin comm<=0; j<=0; i<=0;  poss_y<=8'h43; message<=poss_y; if(avail) count<=4'hB;end
+
+				4'hB: begin comm<=1; message<=8'h0; 
+				if(avail) begin 
+					if (i<=18) begin 
+						i<=i+1;
+						count<=4'hB;
+					end
+					else begin 
+						j<=j+1;
+						if (j==0) count<=4'hC; 
+						else count<=4'hE; 
+					end
+				end
+				end
+
+				4'hD: begin comm<=0; i<=0; poss_y<=poss_y-1; message<=poss_y; if(avail) count<=4'hB;end
+				
+				4'hE:begin spistart<=0; end
+				
+			
+			endcase
+		end
 
         
 
+
+
+
+
+
+
+		   
 
 
 
