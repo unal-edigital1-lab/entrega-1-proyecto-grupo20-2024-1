@@ -28,7 +28,7 @@ module spi_configBunny(
 	input [3:0] nivel_hambre, 
 	input [3:0] draw,
 	output reg mascota,
-	output reg dibujo
+	output reg done
 	);
 	
 	reg [7:0] message; //mensaje o comando a enviar 
@@ -42,7 +42,7 @@ module spi_configBunny(
 	wire avail;
 
 	assign mascota=0;
-	assign dibujo=0;
+	assign done=0;
 	
 	reg [4:0] state=4'h0;
 	reg [6:0] count=4'h0;
@@ -437,7 +437,7 @@ module spi_configBunny(
 			count<=4'h0;
 			i<=0;
 			j<=0;
-			if(avail) begin dibujo<=1; end
+			if(avail) begin done<=1; end
 		end
 			
 		BARS: begin 	
@@ -475,7 +475,7 @@ module spi_configBunny(
 					else begin 
 						spistart<=0;
 						i<=0;
-						dibujo<=1;
+						done<=1;
 						end
 				end
 			end
