@@ -269,7 +269,7 @@ module spi_configBunny(
 
 		FELIZ: begin
 			case(count)
-			4'h0: begin  comm<=0; poss_x<=8'hA6; message<=poss_x; if(avail) count<=4'h1;end
+			4'h0: begin  comm<=0; poss_x<=8'hB3; message<=poss_x; if(avail) count<=4'h1;end
 			
 			4'h1: begin  comm<=1; message<=8'b00010000; 
 				if(avail)begin
@@ -307,7 +307,7 @@ module spi_configBunny(
 
 		
 		BUNNY: begin //dibujar
-			poss_x<=8'hA5;
+			poss_x<=8'hA2;
 			poss_y<=8'h43;
 			back<=0;	
 			
@@ -486,7 +486,7 @@ module spi_configBunny(
 			4'h7: begin  nivel<=nivel_hambre; k<=0; i<=0; comm<=0; poss_x<=8'h95; message<=poss_x; if(avail) begin j<=j+1; count<=4'h8; end end //cambiar por otro nivel
 			4'h8: begin   poss_y<=poss_y-1; message<=poss_y; if(avail) count<=4'h2;end
 
-			4'h9: begin  nivel<=nivel_hambre; k<=0; i<=0; comm<=0; poss_x<=8'hB2; message<=poss_x; if(avail) begin j<=j+1; count<=4'h2; end end //cambiar por otro nivel
+			4'h9: begin  nivel<=nivel_hambre; k<=0; i<=0; comm<=0; poss_x<=8'hBC; message<=poss_x; if(avail) begin j<=j+1; count<=4'h2; end end //cambiar por otro nivel
 				
 			endcase
 		end
@@ -555,10 +555,12 @@ module spi_configBunny(
 			endcase	
 		end
 
+		//AGREGAR CRUZ AQUI
+			
 		SLEEPY: begin
 			done<=0;
 			case(count)
-			4'h0: begin  spistart<=1; comm<=0;  j<=0; poss_x<=8'hB2; message<=poss_x; if(avail) count<=4'h1;end 
+			4'h0: begin  spistart<=1; comm<=0;  j<=0; poss_x<=8'hB1; message<=poss_x; if(avail) count<=4'h1;end 
 			4'h1: begin   poss_y<=8'h42; message<=poss_y; if(avail) count<=4'h2; end
 			
 			4'h2: begin  comm<=1; message<=8'b11001000-j; if(avail) count<=4'h3; end
@@ -590,7 +592,7 @@ module spi_configBunny(
 		STAR: begin
 			done<=0;
 			case(count)
-			4'h0: begin  spistart<=1; comm<=0; i<=0; poss_x<=8'hC1; message<=poss_x; if(avail) count<=4'h1;end 
+			4'h0: begin  spistart<=1; comm<=0; i<=0; poss_x<=8'hBC; message<=poss_x; if(avail) count<=4'h1;end 
 			4'h1: begin   poss_y<=8'h43; message<=poss_y; if(avail) count<=4'h2; end
 			4'h2: begin  comm<=1; message<=8'b0100000;
 				if(avail) begin
@@ -685,55 +687,40 @@ module spi_configBunny(
 		PART_CLEAN: begin //limpia alrededor del conejo
 			done<=0;
 			case(count)
-			4'h0: begin  spistart<=1; comm<=0; poss_x<=8'h0; message<=poss_x; if(avail) count<=4'h1;end 
-			4'h1: begin   poss_y<=8'h43; message<=poss_y; if(avail) count<=4'h2;end
-				
-			4'h5: begin comm<=1; message<=8'h0; 
+				4'h0: begin  spistart<=1; comm<=0; poss_y<=8'h43; message<=poss_y; if(avail) count<=4'h1;end
+				4'h1: begin   poss_x<=8'h0; message<=poss_x; if(avail) count<=4'h2;end 
+			
+			4'h2: begin comm<=1; message<=8'h0; 
 				if(avail) begin 
-					if (i<=30) begin 
+					if (i<26) begin 
 						i<=i+1;
-						count<=4'h5;
+						count<=4'h2;
 					end 
 					else begin 
 						j<=j+1;
-						if (j==0) count<=4'h6; 
-						else count<=4'h7; 
+						if (j==0) count<=4'h3; 
+						else if (j==1) count<=4'h4;
+						else if (j==2) count<=4'h6;
+						else if (j==3) count<=4'h7;
+						else if(j==4) count<=4'h8;
+						else count<=4'h9;
 					end
 				end
 			end
 
-			4'h6: begin comm<=0; i<=0; poss_y<=poss_y-1; message<=poss_y; if(avail) count<=4'h5;end
-			4'h7: begin comm<=0;  i<=0; poss_x<=8'hB2; message<=poss_x; if(avail) count<=4'h8;end
-			4'h8: begin   poss_y<=8'h42; message<=poss_y; if(avail) count<=4'h9;end
-			4'h9: begin comm<=1; message<=8'h0; 
-				if(avail) begin 
-					if (i<=14) begin 
-						i<=i+1;
-						count<=4'h9;
-					end
-					else count<=4'hA;
-				end
-			end
-
-			4'hA: begin comm<=0; j<=0; i<=0;  poss_y<=8'h43; message<=poss_y; if(avail) count<=4'hB;end
-
-			4'hB: begin comm<=1; message<=8'h0; 
-				if(avail) begin 
-					if (i<=18) begin 
-						i<=i+1;
-						count<=4'hB;
-					end
-					else begin 
-						j<=j+1;
-						if (j==0) count<=4'hC; 
-						else count<=4'hE; 
-					end
-				end
-			end
-
-			4'hD: begin comm<=0; i<=0; poss_y<=poss_y-1; message<=poss_y; if(avail) count<=4'hB;end
+				4'h3: begin comm<=0; i<=0; poss_y<=poss_y-1; message<=poss_y; if(avail) count<=4'h1;end
 			
-			4'hE: begin 
+				4'h4: begin comm<=0;  i<=0; poss_x<=8'hB8; message<=poss_x; if(avail) count<=4'h5;end
+				
+				4'h5: begin comm<=0; i<=0;  poss_y<=8'h43; message<=poss_y; if(avail) count<=4'h2;end
+				4'h6: begin comm<=0; i<=0;  poss_y<=poss_y-1;; message<=poss_y; if(avail) count<=4'h2;end
+
+				4'h7: begin comm<=0; i<=0; poss_y<=8'h42; message<=poss_y; if(avail) count<=4'h1;end
+				4'h8: begin comm<=0;  i<=0; poss_x<=8'hB0; message<=poss_x; if(avail) count<=4'h2;end
+				
+				
+			
+			4'h9: begin 
 				count<=4'h0;
 				done<=1;
 				spistart<=0;
