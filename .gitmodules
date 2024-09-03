@@ -1,0 +1,3 @@
+[submodule "Pantalla/Visualizacion"]
+	path = Pantalla/Visualizacion
+	url = https://github.com/AsofiaOrt/Visualizacion.git
