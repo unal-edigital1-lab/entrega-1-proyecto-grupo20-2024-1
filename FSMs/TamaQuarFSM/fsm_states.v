@@ -9,11 +9,13 @@ module fsm_states (
        input healing1,
        input change_state1,
        input test1,
+       output [3:0] face,
        output [2:0] foodValue,
        output [2:0] sleepValue,
        output [2:0] funValue,
        output [2:0] happyValue,
-       output [2:0] healthValue
+       output [2:0] healthValue,
+		 output [2:0] stateTest // ver cual estado se esta modificando
     );
 assign feeding = ~feeding1;
 assign light_out = ~light_out1;
@@ -21,12 +23,16 @@ assign echo_sig = ~echo_sig1;
 assign healing = ~healing1;
 assign change_state = ~change_state1;
 assign test = ~test1;
-	 
+
+assign stateTest = state+1;
 assign foodValue = value_food;
 assign sleepValue = value_sleep;
 assign funValue = value_fun;
 assign happyValue = value_happy;
 assign healthValue = value_health;
+
+    reg test_mode = 0;
+    reg [2:0] state = 0;
 
     reg [2:0] value_food = 5;
     reg [2:0] value_sleep = 5;
