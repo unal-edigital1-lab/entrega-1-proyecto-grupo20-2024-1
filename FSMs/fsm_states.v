@@ -66,6 +66,15 @@ parameter FOOD2 = 3'b000, SLEEP2 = 3'b001, FUN2 = 3'b010, HAPPY2 = 3'b011 , HEAL
 
     always @(posedge clk) begin
         test_mode <= (test == 1) ? ~test_mode : test_mode; // se inicia modo test y se cambia si se vuelve a tener la señal
+        if (value_health == 0) begin // se envia cual cara debe de tener la mascota
+            face <= 4'hb;
+        end else if (value_food < 3 || value_sleep < 3 || value_fun < 3 || value_happy < 3 || value_health < 3) begin
+            face <= 4'ha;
+        end else if (value_food == 3 || value_sleep == 3 || value_fun == 3 || value_happy == 3 || value_health == 3) begin
+            face <= 4'h1001;
+        end else begin
+            face <= 4'h1000;
+        end
         if (rst == 0) begin
             value_food = 5;
             value_sleep = 5;
@@ -178,8 +187,8 @@ reg [1:0] next_stateHealth = 1'b0;
             upFun <= 0;
             heal_downFun <= 0;
             // animo señales
-            upHappy <= 0;
             downHappy  <= 0;
+            upHappy <= 0;
             heal_downHappy <= 0;
             // salud
             upHealth <= 0;

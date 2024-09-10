@@ -11,141 +11,120 @@
 
 Este proyecto se centra en la creación de un tamagotchi (mascota virtual) mediante el uso de una FPGA y diversos componentes que mejoren la visualización e interacción con el hardware que se va a crear. Se tiene planeado inicialmente utilizar una pantalla LCD de Nokia para la visualización de la mascota y sus estados, junto con esto se tienen diversos componentes extra como una fotorresistencia y un sensor de ultrasonido, además de los botones ya integrados en la tarjeta, que serán de ayuda para generar una mayor interacción del usuario con su mascota virtual. Todo será programado en Verilog e implementado por medio de Quartus.
 
-
 ***
-## Componentes
 
-### Sensor de ultrasonido HC-SR04
+## Especificación detallada del sistema
+
+### Perifericos
+
+Detalle de la especificación de los componentes del proyecto y su descripción funcional.
+
+| Componente  | Especificación | Funcionamiento|
+| ------------- | ------------- | ------------- |
+| Botón Curar  | Pulsador FPGA  | MODO NORMAL: Cada que se oprima, aumentará el estado de Health. Tendrá un tiempo de recuperación y visualización en la pantalla. MODO TEST: Cada que se oprima, disminuirá el estado seleccionado con Botón Cambio Estado. |
+| Botón Alimentar | Pulsador FPGA  | MODO NORMAL: Cada que se oprima, aumentará el estado de Food. Tendrá un tiempo de recuperación y visualización en la pantalla. MODO TEST: Cada que se oprima, aumentará el estado seleccionado con Botón Cambio Estado. |
+| Botón Reset | Pulsador FPGA  | Cuando esté presionado por 5 segundos, se restablecerá el estado inicial del tamagotchi (todos los niveles igual a 5). |
+| Botón Test| Pulsador FPGA  | Cuando esté presionado por 5 segundos, permitirá modificar directamente los estados haciendolos aumentar o disminuir. Esto se podrá hacer mediante el uso de los botones Cambio Estado, Alimentar y Curar. Tendrá visualización en la pantalla mientras se encuentre en ese estado. |
+| Botón Cambio Estado  | Pulsador adicional  | Solo funcionará en modo test y cada que se oprima, cambiara el estado que puede afectar. |
+| Sensor de Ultrasonido | Sensor HC-SR04 | Cuando detecte una proximidad, la mascota aumentará su estado de Fun, simulando un juego. Tendrá un tiempo minimo de interacción y visualización en la pantalla. |
+| Sensor de Luz | FOTOCELDA LDR | Cuando no le entre luz, la mascota aumentará su estado de Sleep, simulando un periodo de sueño. Tendrá un tiempo minimo de interacción y visualización en la pantalla. |
+| Pantalla | LCD Nokia 5110 | Será la visualización principal, se mostrarán los valores de estado del tamagotchi, su estado actual y las interacciones que realicen con el. |
+| Leds 7 segmentos | Ánodo | Se utilizará para conocer el estado en el cual se encuentra el Botón Cambio Estado. |
+| FPGA | A-C4E6 Cyclone IV FPGA EP4CE6E22C8N | Controlador de las distintas operaciones que se desean hacer (contiene componentes lógicos programables). |
+
+### Caja Negra General
+
+[<img src="fig/CAJA NEGRA DEFINITIVA.jpeg" width="800" alt="CAJA NEGRA DEFINITIVA"/>](fig)
+
+#### Sensor de ultrasonido HC-SR04
 
 _Este es un sensor ultrasónico que tiene una capacidad de detección dentro de un rango entre 0.3 a 3 metros de distancia, y tiene la siguiente descripción de pines[1]._
 
-* Especificación
-
-   * Detalles
-        - Voltaje de alimentación DC: 3V- 5V
-        - Consumo de corriente en reposo: < 2mA
-        - Corriente de operación : 15mA
-        - Rango de detección: 2cm a 400cm ± 3mm
-        - Ángulo efectivo 15º
-        - Dimensiones: 45 mm x 20 mm x 15 m
-
 [<img src="fig/HC-SR04-Ultrasonic.pdf.png" width="400" alt="Pines Sensor ultrasónico"/>](fig)
 
-Este sensor tiene 4 pines de conexión como se ve en la imagen, donde (de izquierda a derecha) 1 es VCC (power cathode), 2 es la entrada, 3 es la salida proporcional a la distancia (ECHO) y 4 es ground (power anode).
-
-* Descripción Funcional
-A fin de crear una experiencia de usuario más inmersiva, se buscará integrar el tamagotchi con el entorno real inicialmente por medio del sensor de ultraosonido  HCRS04, con el cual el tamagotchi podrá jugar interpretando las proximidades como obstáculos por los cuales tiene que saltar, permitiendo simular un juego con la mascota y asi aumentar su nivel de diversión. 
-
-Con el fin de desarrollar esto, se utiliza el contador de la FPGA para generar un pulso de duración específica (típicamente de 10 microsegundos) en el pin Trigger, posteriormente, aunque no de forma inmediata, el pin Echo se mantiene en alto mientras el sensor está recibiendo el eco. El ancho de pulso de esta señal es proporcional a la distancia al objeto.
+Se utiliza el contador de la FPGA para generar un pulso de duración específica (típicamente de 10 microsegundos) en el pin Trigger, posteriormente, aunque no de forma inmediata, el pin Echo se mantiene en alto mientras el sensor está recibiendo el eco. El ancho de pulso de esta señal es proporcional a la distancia al objeto.
 
 * Sistema de Caja Negra
 
 [<img src="fig/CAJA NEGRA ULTRA.jpeg" width="400" alt="Sensor ultrasónico"/>](fig)
 
 
-### Pantalla LCD Nokia 5110
+#### Pantalla LCD Nokia 5110
 
-_Es una pantalla blanco y negro usada anteriormente en los teléfonos de marca Nokia. Esta se puede utilizar para mostrar caracteres alfanuméricos, dibujar formas e incluso mapas de bits por medio de sus 84*48 pixeles monocromáticos (84 columnas y 48 filas), esto se puede lograr mediante el método de comunicación SPI que acepta esta pantalla._
-
-* Especificaciones
-
-    * Detalles
-        - Diseñado para trabajar de 2.7v a 3.3v
-        - Niveles de comunicación de 3v
-        - Salidas de 48 filas y 84 columnas
-        - RES (reset) externo
-        - Interfas serial maxima de 40 Mbits/s
-        - Entradas compatibles con CMOS
-        - Mux rate: 48
-        - Rango de voltaje del display, 6v a 8.5v con voltaje LCD generado internamente o 6v a 9v con voltaje LCD suministrado externamente.
-        - Bajo consumo, adecuado para trabajar con sistemas de baterias
-        - Rango de temperatura: -25°C a +70°C    
+_Es una pantalla blanco y negro usada anteriormente en los teléfonos de marca Nokia. Tiene 84*48 pixeles monocromáticos (84 columnas y 48 filas) para visualización, se lograr la conexión mediante el método de comunicación SPI que acepta esta pantalla._
 
 [<img src="fig/Nokia-5110-LCD-Pinout-diagram-details.webp" width="300" alt="Pines LCD"/>](fig)
 
-
-
-* Descripción Funcional 
-
-En esta pantalla se mostrará a la mascota virtual así como las diferentes reacciones que pueda llegar a tener dependiendo del nivel de sus estados y las interacciones que se realicen con ella. Además esta pantalla tiene la opción de variar la "backlight" que se relacionará con el periodo de día o noche.
-
-La pantalla LCD Nokia 5110 tiene un área de visualización adecuada para el tamagotchi, lo que permite mostrar más contenido simultáneamente y permitirá una interfaz de usuario más intuitiva y con mayor información al mostrar los niveles de estado en pantalla directamente.
+En esta pantalla se mostrará a la mascota virtual así como las diferentes reacciones que pueda llegar a tener dependiendo del nivel de sus estados y las interacciones que se realicen con ella. Los niveles de los estados tendrán una escala de 1 a 5 y se verán reflejados en la pantalla como barras.
 
 * Sistema de Caja Negra
 
 [<img src="fig/CAJA NEGRA LCD.jpeg" width="500" alt="CAJA NEGRA LCD"/>](fig)
 
 
-### Sensor de luz con Fotorresistencia
+#### Sensor de luz con Fotorresistencia
 
-_La fotorresistencia una resistencia que varía en función de la luz que incide sobre su superficie, cuanto mayor sea la intensidad de la luz que incide en la superficie del LDR menor será su resistencia y cuanta menos luz incida mayor será su resistencia. El voltaje de salida digital es un “0” lógico cuando la intensidad de luz excede el valor fijado por el potenciómetro y es un “1” lógico cuando sucede lo contrario. El voltaje de salida analógico simplemente aumenta o disminuye de acuerdo al aumento o disminución de intensidad de luz, respectivamente._
-
-* Especificaciones
-
-    * Detalles
-        - Voltaje de alimentación DC: 3.3V a 5V
-        - Utiliza el integrado LM393
-        - Utiliza Fotoresistencia GL5528
-        - En la oscuridad, resistencia varia entre 1MΩ; bajo alta intensidad de luz, resistencia varia entre 100Ω
-        - Cambio de intensidad luminica tiene una respuesta de una décima de segundo
-        - Salida: Digital y Analógica
-        - Sensibilidad ajustable con potenciómetro
+_Resistencia que varía en función de la luz que incide sobre su superficie, cuanto mayor sea la intensidad de la luz que incide menor será su resistencia y cuanta menos luz incida mayor será su resistencia. El voltaje de salida digital es un “0” lógico cuando la intensidad de luz es alta y es un “1” lógico cuando sucede lo contrario._
 
 [<img src="fig/modulo-sensor-ldr.jpg" width="250" alt="Pines Sensor de luz"/>](fig)
 
-* Descripción Funcional
-
-Se usará un sensor de luz para determinar cuando la mascota podrá descansar. Siempre que el sensor detecte luz se podrá realizar el resto de funciones con normalidad menos la de descansar o dormir y cuando el sensor no detecte luz este enviara una señal para que la mascota virtual pueda descansar y así reponer su nivel de energía con el tiempo.
+Se usará un sensor de luz para determinar cuando la mascota podrá descansar. Cuando el sensor no detecte luz este enviara una señal, después de un tiempo, para que la mascota virtual pueda descansar y así aumentar su nivel Sleep.
 
 * Sistema de Caja Negra
 
 [<img src="fig/CAJA NEGRA FOTO.jpeg" width="400" alt="Sensor de luz"/>](fig)
 
-## Caja Negra General
-
-[<img src="fig/CAJA NEGRA DEFINITIVA.jpeg" width="800" alt="CAJA NEGRA DEFINITIVA"/>](fig)
-
 ## Arquitectura del Sistema
-[<img src="fig/Diagrama de flujo (1).jpg" width="1000" alt="Diagrama de flujo"/>](fig)
-
-En el diagrama se representan los caminos para los cinco estados: Ánimo, Diversión, Energía, Comida y Salud. Este diagrama muestra los requisitos necesarios para que cada estado cambie de valor, así como los posibles caminos para cada uno, teniendo en cuenta que los estados funcionan en paralelo.
-
-Por ejemplo, después de 30 segundos, la mascota sentirá hambre. En este caso, hay dos opciones: alimentarla repetidamente hasta el máximo de su valor o ignorarla. Si no se alimenta y el estado de Comida llega a un valor de 1, la mascota perderá salud debido a la inanición.
-
-Los casos de insomnio, inanición y depresión son situaciones en las que la mascota pierde puntos de salud, los cuales solo podrán ser recuperados mediante el uso repetido de la acción de curar.
-
-
-## Funcionamiento
 
 ### Estados
 
-Inicialmente el Tamagotchi tendrá una serie de estados que reflejaran ciertas necesidades físicas y emocionales, como los siguientes:
+La maquina de estados, funcionará en ciclos de 90 segundos para aumentar o disminuir los valores de los estados.
 
-* Comida: Indica la necesidad de alimentar a la mascota. 
-  - La falta de atención a esta necesidad puede disminuir el estado de Salud.
-* Diversión: Indica la necesidad de entretenimiento de la mascota. 
-  - La inactividad prolongada puede disminuir el estado de Animo.
-  - La actividad ocasional mantendrá un estado de Animo óptimo y de vez en cuando disminuira el estado de Energía.
-* Energía: Indica cuando la mascota requiere reposo para recuperar energía.
-  - EL estado de Energía disminuye después de períodos de actividad intensa o si se mantiene despierta a la mascota durante el periodo de noche.
-  - El bajo nivel del estado de Energía disminuye el estado de Salud de la mascota.
-* Salud: Refleja el cuidado general de la mascota.
-  - Puede disminuir por el bajo nivel del estado de Hambre y de Energía de la mascota.
-  - Cuando es bajo se requieren intervenir para su recuperación.
-  - Un estado de Salud igual a 1 indica el fin del juego.
-* Ánimo: Refleja el bienestar general de la mascota.
-  - Aumenta y se mantiene en niveles óptimos al mantener los demás estados en niveles altos.
+El Tamagotchi tendrá una serie de estados que reflejaran ciertas necesidades físicas y emocionales, como los siguientes:
 
-### Perifericos
+| Estado | Descripción | Consecuencia Health |
+| ------------- | ------------- | ------------- |
+| Food | Cada que pasen 30, 60 o 90 segundos, se disminuye Food. Si se obtiene la señal que indica Alimentar, se aumenta Food. | Si food es menor a 3, cada que pasen 20, 55 o 85 segundos, se disminuirá Health. |
+| Sleep | Cada que pasen 18, 49 o 86 segundos, se disminuye Sleep. Si se obtiene la señal que indica Dormir, se aumenta Sleep. | Si Sleep es menor a 3, cada que pasen 34 o 75 segundos, se disminuirá Health. |
+| Fun | Cada que pasen 25, 50, 73, o 89 segundos, se disminuye Fun. Si se obtiene la señal que indica Diversión, se aumenta Fun. | Si Fun es menor a 3, cada que pasen 33 o 77 segundos, se disminuirá Health. |
+| Happy | Cada que pasen 23, 47, 69 o 83 segundos, sí se tiene que Food y Fun son menores que 3, se disminuye Happy. Cada que pasen 22 o 70 segundos, sí se tiene que Food y Fun son mayores que 3, se aumenta Food. | Si Happy es menor a 3, cada que pasen 2, 32 o 62 segundos, se disminuirá Health. |
+| Health | Sí se obtiene la señal de curar, se aumentará Health. | _No se altera_|
 
-* Botones
+### Diagramas de Maquinas de Estados
 
-    - Reset: Reestablece el Tamagotchi a un estado inicial conocido al mantener pulsado el botón durante al menos 5 segundos. Este estado inicial simula el despertar de la mascota con sus estados óptimos.
-    -  Test: Activa el modo de prueba al mantener pulsado el botón durante al menos 5 segundos, permitiendo al usuario navegar entre los diferentes estados del Tamagotchi con los botones de interacción.
-    - Botón de Interacción (a): Alimentar a la mascota aumenta su estado de Comida.
-    - Botón de Interacción (b): Curar a la mascota aumenta su estado de Salud y evita el empeoramiento de los demas estados.
+[<img src="fig/FSMgrafico.jpg" width="1000" alt="Diagrama de flujo"/>](fig)
 
-Los niveles de los estados tendrán una escala de 1 a 5 y se verán reflejados en la pantalla como barras.
+Se decidió realizar 5 maquinas de estados que operan de manera paralela cada una con sus propias señales. Estas señales cambian dependiendo del tiempo y de condiciones predefinidas, los estados de cada una de las maquinas se dividen entre los estados que disminuyen el valor del estado de la mascota, los que lo aumentan y los que disminuyen Health.
+
+Los estados de los valores de estado de la mascota son los siguientes:
+
+#### Food (comida)
+* IDLEFOOD: inicializa los valores en 0.
+* HUNGER: disminuye el valor de Food si han pasado los segundos necesarios.
+* FEED: aumenta el valor de Food si se ha recibido la señal de alimentar.
+* STARVE: disminuye el valor del estado de Health si han pasado los segundos necesarios.
+#### Sleep (descanso)
+* IDLESLEEP: inicializa los valores en 0.
+* TIRED: disminuye el valor de Sleep si han pasado los segundos necesarios.
+* REST: aumenta el valor de Sleep si se ha recibido la señal de dormir.
+* INSOMNIA: disminuye el valor del estado de Health si han pasado los segundos necesarios.
+#### Fun (diversión)
+* IDLEFUN: inicializa los valores en 0.
+* BOREDOM: disminuye el valor de Fun si han pasado los segundos necesarios.
+* PLAY: aumenta el valor de Fun si se ha recibido la señal de alimentar.
+* DEPRESSION: disminuye el valor del estado de Health si han pasado los segundos necesarios.
+#### Happy (animo)
+* IDLEHAPPY: inicializa los valores en 0.
+* SAD: disminuye el valor de Happy si han pasado los segundos necesarios.
+* JOLLY: aumenta el valor de Happy si se ha recibido la señal de alimentar.
+* SADNESS: disminuye el valor del estado de Health si han pasado los segundos necesarios.
+#### Health (salud)
+* IDLEHEALTH: inicializa los valores en 0.
+* HEAL: aumenta el valor de Health si se ha recibido la señal de alimentar.
+
+
+
+
 
 
 ### Mascota
