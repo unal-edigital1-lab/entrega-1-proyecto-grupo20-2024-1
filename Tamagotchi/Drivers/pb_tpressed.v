@@ -1,19 +1,16 @@
 
-module pb_rst(  
-    input pb_in1,
+module pb_tpressed(  
+    input pb_in,
     input clk,
-    output reg pb_out,
-    output rst_signal
+    output signal_out
 );
-
-assign pb_in = pb_in1;
-//assign pb_in = ~pb_in1;
 
 //Para activar reset, se mantiene presionado cierto tiempo
 localparam LIMIT = 200000000; //Numero de ciclos 
 
 //Ancho de esta variable determinada automáticamente en función del valor de LIMIT"
 reg [$clog2(LIMIT)+1:0] flag_counter;
+reg pb_out;
 wire Q2, Q3;
 
 //Llamamos al flip flop tipo D
@@ -21,7 +18,7 @@ DD_FF d1(.clk(clk), .D(pb_out), .Q(Q2));
 DD_FF d2(.clk(clk), .D(Q2), .Q(Q3));
 
 assign Q3_bar = ~Q3;
-assign rst_signal = Q2 & Q3_bar; 
+assign signal_out = Q2 & Q3_bar; 
 
 
 initial begin

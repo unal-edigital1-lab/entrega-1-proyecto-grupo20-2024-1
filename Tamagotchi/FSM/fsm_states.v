@@ -2,27 +2,24 @@
 
 module fsm_states (
        input clk,
-       input rst,
+       input rst1,
        input feeding,
        input light_out,
        input echo_sig,
        input healing,
        input change_state,
        input test,
+       //variables conexion pantalla y 7sseg
+       input done,
+	   //input sclock,
+       output [3:0] face1,
        output [2:0] foodValue,
        output [2:0] sleepValue,
        output [2:0] funValue,
        output [2:0] happyValue,
        output [2:0] healthValue,
-	   output [2:0] stateTest // ver cual estado se esta modificando
+		 output [2:0] stateTest // ver cual estado se esta modificando
     );
-//Se conectan las salidas con las variables locales
-assign stateTest = state+1;
-assign foodValue = value_food;
-assign sleepValue = value_sleep;
-assign funValue = value_fun;
-assign happyValue = value_happy;
-assign healthValue = value_health;
 
     reg test_mode = 0;
     reg [2:0] state = 0;
@@ -33,7 +30,6 @@ assign healthValue = value_health;
     reg [2:0] value_happy = 5;
     reg [2:0] value_health = 5;
 
-// Variables de subida de nivel, bajada de nivel y bajada de salud dependiendo del nivel
     reg upFood = 0;
     reg upSleep = 0;
     reg upFun = 0;
@@ -49,68 +45,21 @@ assign healthValue = value_health;
     reg heal_downSleep = 0;
     reg heal_downFun = 0;
     reg heal_downHappy = 0;
+	 
+	 reg [3:0] face=4'hC;
 
-// PRIMERA PARTE FSM, asignacion de estado a los niveles
-    always @(posedge clk) begin
-        food_state <= (rst == 0) ? IDLEFOOD : next_stateFood;
-        sleep_state <= (rst == 0) ? IDLESLEEP : next_stateSleep;
-        fun_state <= (rst == 0) ? IDLEFUN : next_stateFun;
-        happy_state <= (rst == 0) ? IDLEHAPPY : next_stateHappy;
-        health_state <= (rst == 0) ? IDLEHEALTH : next_stateHealth;
-    end
+assign rst = ~rst1;
+assign stateTest = state+1;
+assign foodValue = value_food;
+assign sleepValue = value_sleep;
+assign funValue = value_fun;
+assign happyValue = value_happy;
+assign healthValue = value_health;
+assign face1 = face;
 
-parameter FOOD2 = 3'b000, SLEEP2 = 3'b001, FUN2 = 3'b010, HAPPY2 = 3'b011 , HEALTH2 = 3'b100;
-
-    always @(posedge clk) begin
-        // activacion de modo test
-        test_mode <= (test == 1) ? ~test_mode : test_mode;
-        if (rst == 0) begin
-            value_food = 5;
-            value_sleep = 5;
-            value_fun = 5;
-            value_happy = 5;
-            value_health = 5;
-        // estado de muerte 
-        end else if (value_health == 1) begin
-            value_food = 0;
-            value_sleep = 0;
-            value_fun = 0;
-            value_happy = 0;
-            value_health = 0;
-        // subida y bajada de niveles en modo normal
-        end else if (test_mode == 0) begin
-            value_food <= (upFood == 1 && value_food < 5 && value_food > 0) ? value_food+1: (downFood == 1 && value_food < 6 && value_food > 1) ? value_food-1: value_food;
-            value_sleep <= (upSleep == 1 && value_sleep < 5 && value_sleep > 0) ? value_sleep+1: (downSleep == 1 && value_sleep < 6 && value_sleep > 1) ? value_sleep-1: value_sleep;
-            value_fun <= (upFun == 1 && value_fun < 5 && value_fun > 0) ? value_fun+1: (downFun == 1 && value_fun < 6 && value_fun > 1) ? value_fun-1: value_fun;
-            value_happy <= (upHappy == 1 && value_happy < 5 && value_happy > 0) ? value_happy+1: (downHappy == 1 && value_happy < 6 && value_happy > 1) ? value_happy-1: value_happy;
-            value_health <= (upHealth == 1 && value_health < 5 && value_health > 0) ? value_health+1: ((heal_downFood == 1 || heal_downSleep || heal_downFun || heal_downHappy) && value_health < 6 && value_health > 1) ? value_health-1: value_health;
-        end else begin
-            // variable para escoger nivel a alterar
-            state <= (change_state == 1) ? (state == 4) ? 0 : state+1 : state; 
-            // subida y bajada de niveles en modo test
-            case(state)
-                FOOD2: value_food <= (feeding == 1 && value_food < 5 && value_food > 0) ? value_food+1 : (healing == 1 && value_food < 6 && value_food > 1) ? value_food-1 : value_food;
-                SLEEP2: value_sleep <= (feeding == 1 && value_sleep < 5 && value_sleep > 0) ? value_sleep+1 : (healing == 1 && value_sleep < 6 && value_sleep > 1) ? value_sleep-1 : value_sleep;
-                FUN2: value_fun <= (feeding == 1 && value_fun < 5 && value_fun > 0) ? value_fun+1 : (healing == 1 && value_fun < 6 && value_fun > 1) ? value_fun-1 : value_fun;
-                HAPPY2: value_happy <= (feeding == 1 && value_happy < 5 && value_happy > 0) ? value_happy+1 : (healing == 1 && value_happy < 6 && value_happy > 1) ? value_happy-1 : value_happy;
-                HEALTH2: value_health <= (feeding == 1 && value_health < 5 && value_health > 0) ? value_health+1 : (healing == 1 && value_health < 6 && value_health > 1) ? value_health-1 : value_health;
-            endcase
-        end
-    end
-
-// contador de ciclos de 90 segundo
-parameter freq = 50000000; //50000000 MHz equivalen a 1 segundo
+parameter freq = 50000000; //50 MHz
 reg [6:0] sec_count = 0; // segundos hasta 128
 reg [25:0] counter = 0; //Contador de 26 bits 
-
-    always @(posedge clk) begin 
-        if (counter == freq) begin
-            sec_count <= (sec_count == 90) ? 0 : sec_count+1; // se reinician los segundos o aumenta contador segundos
-            counter <= 0; // se reinicia el contador 
-        end else begin 
-            counter <= counter+1;
-        end 
-    end
 
 parameter IDLEFOOD = 2'b00, HUNGER = 2'b01, FEED = 2'b10, STARVE = 2'b11;
 reg [1:0] food_state = IDLEFOOD;
@@ -132,7 +81,110 @@ parameter IDLEHEALTH = 1'b0, HEAL = 1'b1;
 reg [1:0] health_state = IDLEHEALTH;
 reg [1:0] next_stateHealth = 1'b0;
 
-// SEGUNDA PARTE FSM, logica de cambio de estados
+ reg [3:0] i =4'h0;
+ reg j=0;
+ reg [25:0] sketch_time=0;
+ 
+    always @(posedge clk) begin
+        food_state <= (rst == 0) ? IDLEFOOD : next_stateFood;
+        sleep_state <= (rst == 0) ? IDLESLEEP : next_stateSleep;
+        fun_state <= (rst == 0) ? IDLEFUN : next_stateFun;
+        happy_state <= (rst == 0) ? IDLEHAPPY : next_stateHappy;
+        health_state <= (rst == 0) ? IDLEHEALTH : next_stateHealth;
+    end
+
+parameter FOOD2 = 3'b000, SLEEP2 = 3'b001, FUN2 = 3'b010, HAPPY2 = 3'b011 , HEALTH2 = 3'b100;
+
+		always@(posedge done) begin 
+			
+			case(i) 
+			
+			4'h0: begin face<=4'h1; j<=0; i<=4'h1; end
+			4'h1: begin if (value_food > 3 && value_sleep > 3 && value_fun > 3 && value_happy > 3 && value_health > 3) face<=4'h8;	
+					else if (value_health == 0) face<=4'hB; 	
+					else if (value_food < 3 || value_sleep < 3 || value_fun < 3 || value_happy < 3 || value_health < 3) face<=4'hA; 
+					else if (value_food == 3 || value_sleep == 3 || value_fun == 3 || value_happy == 3 || value_health == 3) face<=4'h9;
+			
+	      /*
+			4'h1: begin if (value_health == 0) face<=4'hB; 
+					else if (value_food < 3 || value_sleep < 3 || value_fun < 3 || value_happy < 3 || value_health < 3) face<=4'hA; 
+					else if (value_food == 3 || value_sleep == 3 || value_fun == 3 || value_happy == 3 || value_health == 3) face<=4'h9; 	
+					else face<=4'h8;	
+					//else if (value_food > 3 && value_sleep > 3 && value_fun > 3 && value_happy > 3 && value_health > 3) face<=4'h8;	
+			*/			
+					
+					if(j==0) begin j<=j+1; i<=4'h3; end
+					end 
+			4'h3: begin if(feeding==1) begin face<=4'h2; end 
+					else if (light_out==1) begin face<=4'h4; end
+					else if (echo_sig==1) begin face<=4'h5; end
+					else if (healing==1) begin face<=4'h3; end
+					else if (test==1) begin face<=4'h7; end
+					
+					if(j==1) begin j<=j+1; sketch_time<=counter+5000000; i<=4'h0; end
+					end 
+		
+			4'h4: begin face<=4'h1; j<=0; i<=4'h5; end
+			4'h5: begin if(counter>sketch_time) begin face<=4'h6; i<=4'h0; end else i<=4'h5; end
+			
+
+			/*
+			if(i==0) begin i<=1; face<=4'h1; end 
+			else if(feeding==1) begin face<=4'h2; end 
+			else if (light_out==1) begin face<=4'h4; end
+			else if (echo_sig==1) begin face<=4'h5; end
+			else if (healing==1) begin face<=4'h3; end
+			else if (test==1) begin face<=4'h7; end
+			else if (value_food > 3 && value_sleep > 3 && value_fun > 3 && value_happy > 3 && value_health > 3) begin face<=4'h8; end
+			else if (value_food < 3 || value_sleep < 3 || value_fun < 3 || value_happy < 3 || value_health < 3) begin face<=4'hA; i=0; end
+			else if (value_food == 3 || value_sleep == 3 || value_fun == 3 || value_happy == 3 || value_health == 3) begin face<=4'h9; i=0; end	
+*/
+		endcase
+		end
+
+
+    always @(posedge clk) begin
+        test_mode <= (test == 1) ? ~test_mode : test_mode;
+	
+        if (rst == 0) begin
+            value_food = 5;
+            value_sleep = 5;
+            value_fun = 5;
+            value_happy = 5;
+            value_health = 5;
+        end else if (value_health == 1) begin
+            value_food = 0;
+            value_sleep = 0;
+            value_fun = 0;
+            value_happy = 0;
+            value_health = 0;
+        end else if (test_mode == 0) begin
+            value_food <= (upFood == 1 && value_food < 5 && value_food > 0) ? value_food+1: (downFood == 1 && value_food < 6 && value_food > 1) ? value_food-1: value_food;
+            value_sleep <= (upSleep == 1 && value_sleep < 5 && value_sleep > 0) ? value_sleep+1: (downSleep == 1 && value_sleep < 6 && value_sleep > 1) ? value_sleep-1: value_sleep;
+            value_fun <= (upFun == 1 && value_fun < 5 && value_fun > 0) ? value_fun+1: (downFun == 1 && value_fun < 6 && value_fun > 1) ? value_fun-1: value_fun;
+            value_happy <= (upHappy == 1 && value_happy < 5 && value_happy > 0) ? value_happy+1: (downHappy == 1 && value_happy < 6 && value_happy > 1) ? value_happy-1: value_happy;
+            value_health <= (upHealth == 1 && value_health < 5 && value_health > 0) ? value_health+1: ((heal_downFood == 1 || heal_downSleep || heal_downFun || heal_downHappy) && value_health < 6 && value_health > 1) ? value_health-1: value_health;
+		end else begin
+            state <= (change_state == 1) ? (state == 4) ? 0 : state+1 : state; 
+            case(state)
+                FOOD2: value_food <= (feeding == 1 && value_food < 5 && value_food > 0) ? value_food+1 : (healing == 1 && value_food < 6 && value_food > 1) ? value_food-1 : value_food;
+                SLEEP2: value_sleep <= (feeding == 1 && value_sleep < 5 && value_sleep > 0) ? value_sleep+1 : (healing == 1 && value_sleep < 6 && value_sleep > 1) ? value_sleep-1 : value_sleep;
+                FUN2: value_fun <= (feeding == 1 && value_fun < 5 && value_fun > 0) ? value_fun+1 : (healing == 1 && value_fun < 6 && value_fun > 1) ? value_fun-1 : value_fun;
+                HAPPY2: value_happy <= (feeding == 1 && value_happy < 5 && value_happy > 0) ? value_happy+1 : (healing == 1 && value_happy < 6 && value_happy > 1) ? value_happy-1 : value_happy;
+                HEALTH2: value_health <= (feeding == 1 && value_health < 5 && value_health > 0) ? value_health+1 : (healing == 1 && value_health < 6 && value_health > 1) ? value_health-1 : value_health;
+            endcase
+        end
+    end
+
+    always @(posedge clk) begin 
+        if (counter == freq) begin
+            sec_count <= (sec_count == 90) ? 0 : sec_count+1; // se reinician los segundos o aumenta contador segundos
+            counter <= 0; // se reinicia el contador 
+        end else begin 
+            counter <= counter+1;
+        end 
+    end
+
     always @(*) begin
         case(food_state)
             IDLEFOOD: next_stateFood <= HUNGER;
@@ -164,7 +216,6 @@ reg [1:0] next_stateHealth = 1'b0;
         endcase
     end
 
-// TERCERA PARTE FSM, consecuencias de cambios de estados
     always @(posedge clk) begin
         if (rst == 0) begin
             // comida señales
@@ -183,7 +234,7 @@ reg [1:0] next_stateHealth = 1'b0;
             upHappy <= 0;
             downHappy  <= 0;
             heal_downHappy <= 0;
-            // salud señales
+            // salud
             upHealth <= 0;
         end else begin
             case(food_state)

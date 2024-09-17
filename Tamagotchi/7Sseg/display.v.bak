@@ -20,7 +20,7 @@ module display(
  
 	 
 reg [5:0] bcd=0;
-assign rst1 = ~rst;
+ 
 BCDtoSSeg bcdtosseg(.BCD(bcd), .SSeg(sseg));
 
 reg [26:0] cfreq=0;
@@ -30,7 +30,7 @@ wire enable;
 
 assign enable = cfreq[16];
 always @(posedge clk) begin
-  if(rst1==0) begin
+  if(rst==0) begin
 		cfreq <= 0;
 	end else begin
 		cfreq <=cfreq+1'b1;
@@ -42,7 +42,7 @@ reg [2:0] count1 = 2'b0;
 
 always @(posedge enable) begin
 
-		if(rst1==0) begin
+		if(rst==0) begin
 			count1 <= 0;
 			an <= 4'b1111; 
 			an1 <= 4'b1111; 

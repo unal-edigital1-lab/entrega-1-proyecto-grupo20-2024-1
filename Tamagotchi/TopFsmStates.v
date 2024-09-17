@@ -12,7 +12,13 @@ module TopFsmStates(
 	output trig_sig,
 	output [0:6] sseg7,
 	output [2:0] an_1,
-	output [2:0] an1_1
+	output [2:0] an1_1,
+	output mosi,
+	output sclk,
+	output sce,
+	output dc,
+	output Reset,
+	output reg back
     );
 
 //CONEXION MAQUINA DE ESTADOS CON SALIDAS
@@ -25,13 +31,14 @@ module TopFsmStates(
 
 //CONEXION ENTRADAS CON SALIDAS
     wire feeding1;
-	 wire healing1;
-	 wire change1;
-	 wire light_out1;
-	 wire test_sig1;
-	 wire objectUltra1;
-	 wire rst;
-
+	wire healing1;
+	wire change1;
+	wire light_out1;
+	wire test_sig1;
+	wire objectUltra1;
+	wire rst;
+	wire done;
+	wire [3:0] face;
 
 //DRIVER DE BOTONES
 signal_drivers drivers(
@@ -56,7 +63,7 @@ signal_drivers drivers(
 //MAQUINA DE ESTADOS
 fsm_states states(
 	.clk(Clk), 
-	.rst(rst),
+	.rst1(rst),
 	.feeding(feeding1),
     .light_out(light_out1),
     .echo_sig(objectUltra1),
@@ -68,8 +75,30 @@ fsm_states states(
     .funValue(funValueF),
     .happyValue(happyValueF),
     .healthValue(healthValueF),
-	.stateTest(testValueF),	 
+	.stateTest(testValueF),
+	.face1(face),
+	.done(done),
+	//.sclock(sclk)
 	);
+
+// SE utiliza reset dirctamente de la fpga por que no funciona bien
+// PANTALLA NOKIA
+spi_configBunny Configbunny(
+    .clock(Clk),
+    .Reset1(Rst1),
+    .mosi(mosi),
+    .sclk(sclk),
+    .sce(sce),
+    .dc(dc),
+    .rst(Reset),
+    .nivel_hambre(foodValueF),
+	.nivel_sueno(sleepValueF), 
+	.nivel_diversion(funValueF), 
+	.nivel_animo(happyValueF), 
+	.nivel_salud(healthValueF), 	
+    .draw(face),
+    .done(done),
+  );
 
 // DISPLAY 7 SEGMENTOS
 display displayOut(
