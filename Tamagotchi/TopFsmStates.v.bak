@@ -1,0 +1,89 @@
+`timescale 1ns / 1ps
+
+module TopFsmStates(
+    input Clk,
+    input Rst,
+	input feeding,
+    input light_out,
+    input echo_sig,
+    input healing,
+	input change,
+	input testBut,
+	output trig_sig,
+	output [0:6] sseg7,
+	output [2:0] an_1,
+	output [2:0] an1_1
+    );
+
+//CONEXION MAQUINA DE ESTADOS CON SALIDAS
+	wire [2:0] foodValueF;
+	wire [2:0] sleepValueF;
+	wire [2:0] funValueF;
+	wire [2:0] happyValueF;
+	wire [2:0] healthValueF;
+	wire [2:0] testValueF;
+
+//CONEXION ENTRADAS CON SALIDAS
+    wire feeding1;
+	 wire healing1;
+	 wire change1;
+	 wire light_out1;
+	 wire test_sig1;
+	 wire objectUltra1;
+	 wire rst;
+
+
+//DRIVER DE BOTONES
+signal_drivers drivers(
+	.clk(Clk),
+    .rst(Rst),
+	.light_out(light_out),
+    .echo_sig(echo_sig),
+    .test(testBut), 
+    .button_food(feeding),
+    .button_heal(healing),
+	.button_change(change),
+	.Rst(rst),
+	.feeding(feeding1), 
+	.healing(healing1),
+	.change(change1),
+	.trig_sig(trig_sig),
+	.objectUltra(objectUltra1),
+	.output light(light_out1),
+	.test_sig(test_sig1),
+);
+
+//MAQUINA DE ESTADOS
+fsm_states states(
+	.clk(Clk), 
+	.rst(rst),
+	.feeding1(feeding1),
+    .light_out1(light_out1),
+    .echo_sig1(objectUltra1),
+    .healing1(healing1),
+	.change_state1(change1),
+	.test1(test_sig1),
+	.foodValue(foodValueF),
+    .sleepValue(sleepValueF),
+    .funValue(funValueF),
+    .happyValue(happyValueF),
+    .healthValue(healthValueF),
+	.stateTest(testValueF),	 
+	);
+
+// DISPLAY 7 SEGMENTOS
+display displayOut(
+	 .clk(Clk), 
+	 .rst(rst),
+	 .sseg(sseg7), 
+	 .an(an_1), 
+	 .an1(an1_1),
+	 .foodValue(foodValueF),
+	 .sleepValue(sleepValueF),
+	 .funValue(funValueF),
+	 .happyValue(happyValueF),
+	 .healthValue(healthValueF),
+	 .testValue(testValueF),
+	 );	
+	
+endmodule

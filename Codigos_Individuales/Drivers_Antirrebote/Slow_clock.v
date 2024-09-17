@@ -13,7 +13,7 @@ reg clk_out1 = 0;
 
 always @(posedge clk_in) begin 
         count <= count+1;
-    if (count == 10) begin //Este dato es igual a 50Mhz/8 countinit=6250000
+    if (count == 10000) begin //Este dato es igual a 50Mhz/8 countinit=6250000
         count <=0;
         clk_out1 = ~ clk_out1; // Niega el reloj de salida 
     end

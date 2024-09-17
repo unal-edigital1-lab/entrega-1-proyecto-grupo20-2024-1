@@ -6,7 +6,8 @@ module pb_rst(
     output rst_signal
 );
 
-assign pb_in = ~pb_in1;
+assign pb_in = pb_in1;
+//assign pb_in = ~pb_in1;
 
 //Para activar reset, se mantiene presionado cierto tiempo
 localparam LIMIT = 200000000; //Numero de ciclos 

@@ -10,7 +10,6 @@ module display(
     output [0:6] sseg,
     output reg [2:0] an,
 	 output reg [2:0] an1,
-	 output led,
 	 input [2:0] foodValue,
     input [2:0] sleepValue,
     input [2:0] funValue,
@@ -30,7 +29,6 @@ wire enable;
 // Divisor de frecuecia
 
 assign enable = cfreq[16];
-assign led =enable;
 always @(posedge clk) begin
   if(rst==0) begin
 		cfreq <= 0;

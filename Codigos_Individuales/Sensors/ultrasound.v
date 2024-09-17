@@ -1,10 +1,8 @@
-module intentoultra5(
+module ultrasound(
     input clk,
     output reg trigger,
     input echo,
-    output reg object_detected,
-	 input button,
-	 output reg ledcito
+    output reg object_detected
 );
 
     reg [31:0] counter = 0;
@@ -20,11 +18,6 @@ module intentoultra5(
 
     // Process for generating the trigger signal
     always @(posedge clk) begin
-	 if (button == 1) begin
-		ledcito <= 1;
-	 end else begin
-		ledcito <=0;
-		end
 	 
         if (trig_state == 0) begin
             trigger <= 0;
