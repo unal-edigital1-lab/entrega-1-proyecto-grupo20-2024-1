@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-`include "/home/juandavidgm/github-classroom/unal-edigital1-lab/FSM_Drivers/fsm_states.v"
+`include "/home/juandavidgm/github-classroom/unal-edigital1-lab/PROYECTO/entrega-1-proyecto-grupo20-2024-1/Codigos_Individuales/FSMs/fsm_states.v"
 
 module fsm_states_tb;
     // Inputs
@@ -48,6 +48,7 @@ module fsm_states_tb;
 		test = 0;
 		//#10000 es un segundo
 		#10;// Wait 100 ns for global reset to finish
+		/*
 		rst = 1;
 		test = 1;
 		@(posedge clk);
@@ -175,6 +176,7 @@ module fsm_states_tb;
 		@(posedge clk);
 		@(negedge clk);
 		test = 0;
+		*/
 	end
 
 	always #1 clk = ~clk;

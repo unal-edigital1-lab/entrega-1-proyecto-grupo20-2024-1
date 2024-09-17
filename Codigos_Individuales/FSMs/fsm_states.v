@@ -13,15 +13,20 @@ module fsm_states (
        output [2:0] sleepValue,
        output [2:0] funValue,
        output [2:0] happyValue,
-       output [2:0] healthValue
+       output [2:0] healthValue,
+	   output [2:0] stateTest // ver cual estado se esta modificando
     );
-/* entradas negadas para fpga
+/* // señales directas de fpga negadas
 assign feeding = ~feeding1;
 assign light_out = ~light_out1;
 assign echo_sig = ~echo_sig1;
 assign healing = ~healing1;
+assign change_state = ~change_state1;
+assign test = ~test1;
 */
-	 
+
+//Se conectan las salidas con las variables locales
+assign stateTest = state+1;
 assign foodValue = value_food;
 assign sleepValue = value_sleep;
 assign funValue = value_fun;
@@ -37,6 +42,7 @@ assign healthValue = value_health;
     reg [2:0] value_happy = 5;
     reg [2:0] value_health = 5;
 
+// Variables de subida de nivel, bajada de nivel y bajada de salud dependiendo del nivel
     reg upFood = 0;
     reg upSleep = 0;
     reg upFun = 0;
@@ -53,7 +59,7 @@ assign healthValue = value_health;
     reg heal_downFun = 0;
     reg heal_downHappy = 0;
 
-    // FSM primera parte
+// PRIMERA PARTE FSM, asignacion de estado a los niveles
     always @(posedge clk) begin
         food_state <= (rst == 0) ? IDLEFOOD : next_stateFood;
         sleep_state <= (rst == 0) ? IDLESLEEP : next_stateSleep;
@@ -65,36 +71,32 @@ assign healthValue = value_health;
 parameter FOOD2 = 3'b000, SLEEP2 = 3'b001, FUN2 = 3'b010, HAPPY2 = 3'b011 , HEALTH2 = 3'b100;
 
     always @(posedge clk) begin
-        test_mode <= (test == 1) ? ~test_mode : test_mode; // se inicia modo test y se cambia si se vuelve a tener la señal
-        if (value_health == 0) begin // se envia cual cara debe de tener la mascota
-            face <= 4'hb;
-        end else if (value_food < 3 || value_sleep < 3 || value_fun < 3 || value_happy < 3 || value_health < 3) begin
-            face <= 4'ha;
-        end else if (value_food == 3 || value_sleep == 3 || value_fun == 3 || value_happy == 3 || value_health == 3) begin
-            face <= 4'h1001;
-        end else begin
-            face <= 4'h1000;
-        end
+        // activacion de modo test
+        test_mode <= (test == 1) ? ~test_mode : test_mode;
         if (rst == 0) begin
             value_food = 5;
             value_sleep = 5;
             value_fun = 5;
             value_happy = 5;
             value_health = 5;
-        end else if (value_health == 1) begin // Estado de muerte
+        // estado de muerte 
+        end else if (value_health == 1) begin
             value_food = 0;
             value_sleep = 0;
             value_fun = 0;
             value_happy = 0;
             value_health = 0;
-        end else if (test_mode == 0) begin // se suben y bajan valores de los valores de los estados del tamagotchi, NO test_mode
+        // subida y bajada de niveles en modo normal
+        end else if (test_mode == 0) begin
             value_food <= (upFood == 1 && value_food < 5 && value_food > 0) ? value_food+1: (downFood == 1 && value_food < 6 && value_food > 1) ? value_food-1: value_food;
             value_sleep <= (upSleep == 1 && value_sleep < 5 && value_sleep > 0) ? value_sleep+1: (downSleep == 1 && value_sleep < 6 && value_sleep > 1) ? value_sleep-1: value_sleep;
             value_fun <= (upFun == 1 && value_fun < 5 && value_fun > 0) ? value_fun+1: (downFun == 1 && value_fun < 6 && value_fun > 1) ? value_fun-1: value_fun;
             value_happy <= (upHappy == 1 && value_happy < 5 && value_happy > 0) ? value_happy+1: (downHappy == 1 && value_happy < 6 && value_happy > 1) ? value_happy-1: value_happy;
             value_health <= (upHealth == 1 && value_health < 5 && value_health > 0) ? value_health+1: ((heal_downFood == 1 || heal_downSleep || heal_downFun || heal_downHappy) && value_health < 6 && value_health > 1) ? value_health-1: value_health;
-        end else begin // se aumentan o decrementan valores si se tiene la señal feeding se aumenta, healing decrementa, SI test_mode
-            state <= (change_state == 1) ? (state == 4) ? 0 : state+1 : state; // se cambia el valor de estado que se quiere aumentar o decrementar
+        end else begin
+            // variable para escoger nivel a alterar
+            state <= (change_state == 1) ? (state == 4) ? 0 : state+1 : state; 
+            // subida y bajada de niveles en modo test
             case(state)
                 FOOD2: value_food <= (feeding == 1 && value_food < 5 && value_food > 0) ? value_food+1 : (healing == 1 && value_food < 6 && value_food > 1) ? value_food-1 : value_food;
                 SLEEP2: value_sleep <= (feeding == 1 && value_sleep < 5 && value_sleep > 0) ? value_sleep+1 : (healing == 1 && value_sleep < 6 && value_sleep > 1) ? value_sleep-1 : value_sleep;
@@ -105,9 +107,9 @@ parameter FOOD2 = 3'b000, SLEEP2 = 3'b001, FUN2 = 3'b010, HAPPY2 = 3'b011 , HEAL
         end
     end
 
-// contador de segundos
-parameter freq = 50; //50000000 para fpga y 50 para testbench(para probar mas facilmente)
-reg [6:0] sec_count = 0; // segundos hasta 128, pero se cuenta hasta 90
+// contador de ciclos de 90 segundo
+parameter freq = 50; //50000000 MHz equivalen a 1 segundo, 50 para simular
+reg [6:0] sec_count = 0; // segundos hasta 128
 reg [25:0] counter = 0; //Contador de 26 bits 
 
     always @(posedge clk) begin 
@@ -139,7 +141,7 @@ parameter IDLEHEALTH = 1'b0, HEAL = 1'b1;
 reg [1:0] health_state = IDLEHEALTH;
 reg [1:0] next_stateHealth = 1'b0;
 
-    // FSM segunda parte, logica de cambio de las FSMs
+// SEGUNDA PARTE FSM, logica de cambio de estados
     always @(*) begin
         case(food_state)
             IDLEFOOD: next_stateFood <= HUNGER;
@@ -161,7 +163,7 @@ reg [1:0] next_stateHealth = 1'b0;
         endcase
         case(happy_state)
             IDLEHAPPY: next_stateHappy <= SAD;
-            SAD: next_stateFun <= (value_food > 3 && value_fun > 3 && counter == 0) ? JOLLY : (value_food < 3 && value_fun < 3 && counter == 0) ? SADNESS : SAD;
+            SAD: next_stateHappy <= (value_food > 3 && value_fun > 3 && counter == 0) ? JOLLY : (value_food < 3 && value_fun < 3 && counter == 0) ? SADNESS : SAD;
             JOLLY: next_stateHappy <= SAD;
             SADNESS: next_stateHappy <= SAD;
         endcase
@@ -171,7 +173,7 @@ reg [1:0] next_stateHealth = 1'b0;
         endcase
     end
 
-    // FSM tercera parte, se envian las señales de cambio de valores y se analiza cumpimiento de condiciones
+// TERCERA PARTE FSM, consecuencias de cambios de estados
     always @(posedge clk) begin
         if (rst == 0) begin
             // comida señales
@@ -187,10 +189,10 @@ reg [1:0] next_stateHealth = 1'b0;
             upFun <= 0;
             heal_downFun <= 0;
             // animo señales
-            downHappy  <= 0;
             upHappy <= 0;
+            downHappy  <= 0;
             heal_downHappy <= 0;
-            // salud
+            // salud señales
             upHealth <= 0;
         end else begin
             case(food_state)
@@ -255,7 +257,7 @@ reg [1:0] next_stateHealth = 1'b0;
                 end
                 DEPRESSION: begin
                     downFun <= 0;
-                    heal_downFun <= (sec_count == 33 || sec_count == 77) ? 1 : 0;
+                    heal_downFun <= (sec_count == 1 || sec_count == 33 || sec_count == 77) ? 1 : 0;
                     upFun <= 0;
                 end 
             endcase
@@ -267,11 +269,11 @@ reg [1:0] next_stateHealth = 1'b0;
                 end
                 SAD: begin
                     upHappy <= 0;
-                    downHappy <= ((sec_count == 23 || sec_count == 47 || sec_count == 69 || sec_count == 83) && counter == 0) ? 1 : 0;
+                    downHappy <= ((sec_count == 23 || sec_count == 47 || sec_count == 69 || sec_count == 83) && counter == 0 && (value_fun < 4 || value_food < 4)) ? 1 : 0;
                     heal_downHappy <= 0;
                 end
                 JOLLY: begin 
-                    upHappy <= (sec_count == 22 || sec_count == 70) ? 1: 0;
+                    upHappy <= (sec_count == 4 || sec_count == 22 || sec_count == 52 || sec_count == 70) ? 1: 0;
                     downHappy <= 0;
                     heal_downHappy <= 0;
                 end

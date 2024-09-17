@@ -108,16 +108,16 @@ Los estados de los valores de estado de la mascota son los siguientes:
 #### Fun (diversión)
 * IDLEFUN: inicializa los valores en 0.
 * BOREDOM: disminuye el valor de Fun si han pasado los segundos necesarios.
-* PLAY: aumenta el valor de Fun si se ha recibido la señal de alimentar.
+* PLAY: aumenta el valor de Fun si se ha recibido la señal del ultrasonido.
 * DEPRESSION: disminuye el valor del estado de Health si han pasado los segundos necesarios.
 #### Happy (animo)
 * IDLEHAPPY: inicializa los valores en 0.
-* SAD: disminuye el valor de Happy si han pasado los segundos necesarios.
-* JOLLY: aumenta el valor de Happy si se ha recibido la señal de alimentar.
+* SAD: disminuye el valor de Happy si han pasado los segundos necesarios y las varaibles Food o Fun son menores a 4.
+* JOLLY: aumenta el valor de Happy si han pasado los segundos necesarios y las varaibles Food y Fun son mayores a 3.
 * SADNESS: disminuye el valor del estado de Health si han pasado los segundos necesarios.
 #### Health (salud)
 * IDLEHEALTH: inicializa los valores en 0.
-* HEAL: aumenta el valor de Health si se ha recibido la señal de alimentar.
+* HEAL: aumenta el valor de Health si se ha recibido la señal de curar.
 
 ## Testbench Maquina de estados
 
