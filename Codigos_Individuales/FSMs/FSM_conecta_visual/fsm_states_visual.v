@@ -48,7 +48,7 @@ module fsm_states (
 	 reg [3:0] face=4'hC;
 
 assign feeding = ~feeding1;
-assign light_out = ~light_out1;
+assign light_out = ~light_out1;//cambio negado para test
 assign echo_sig = ~echo_sig1;
 assign healing = ~healing1;
 assign change_state = ~change_state1;
@@ -88,7 +88,7 @@ reg [1:0] next_stateHealth = 1'b0;
 
  reg [3:0] i =4'h0;
  reg j=0;
- reg [25:0] sketch_time=0;
+ reg t=0;
  
     
 
@@ -107,24 +107,28 @@ parameter FOOD2 = 3'b000, SLEEP2 = 3'b001, FUN2 = 3'b010, HAPPY2 = 3'b011 , HEAL
 			case(i) 
 			
 			4'h0: begin face<=4'h1; j<=0; i<=4'h1; end
-			4'h1: begin if (value_food > 3 && value_sleep > 3 && value_fun > 3 && value_happy > 3 && value_health > 3) face<=4'h8;	
-					else  if (value_health == 0) face<=4'hB; 	
-					else if (value_food < 3 || value_sleep < 3 || value_fun < 3 || value_happy < 3 || value_health < 3) face<=4'hA; 
+			4'h1: begin if (value_health == 0) face<=4'hB; 	
+					else if (value_food < 3 || value_sleep < 3 || value_fun < 3 || value_happy < 3 || value_health < 3) face<=4'hA;
 					else if (value_food == 3 || value_sleep == 3 || value_fun == 3 || value_happy == 3 || value_health == 3) face<=4'h9; 	
+					else face<=4'h8;
 					
 					if(j==0) begin j<=j+1; i<=4'h3; end
 					end 
-			4'h3: begin if(feeding==1) begin face<=4'h2; end 
+					
+			4'h3: begin face<=4'h6; i<=4'h4; end
+			
+			4'h4: begin if(feeding==1) begin face<=4'h2; end 
 					else if (light_out==1) begin face<=4'h4; end
 					else if (echo_sig==1) begin face<=4'h5; end
 					else if (healing==1) begin face<=4'h3; end
-					else if (test==1) begin face<=4'h7; end
+					else if (test==1) begin 
+						if (t==0) begin t<=t+1; face<=4'h7; end
+						else begin t<=0; face<=4'hD; end
+					end
+
 					
-					if(j==1) begin j<=j+1; sketch_time<=counter+5000000; i<=4'h0; end
+					if(j==1) begin j<=j+1; i<=4'h0; end
 					end 
-		
-			4'h4: begin face<=4'h1; j<=0; i<=4'h5; end
-			4'h5: begin if(counter>sketch_time) begin face<=4'h6; i<=4'h0; end else i<=4'h5; end
 			
 
 			/*
