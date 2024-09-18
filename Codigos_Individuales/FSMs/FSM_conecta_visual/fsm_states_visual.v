@@ -129,19 +129,7 @@ parameter FOOD2 = 3'b000, SLEEP2 = 3'b001, FUN2 = 3'b010, HAPPY2 = 3'b011 , HEAL
 					
 					if(j==1) begin j<=j+1; i<=4'h0; end
 					end 
-			
 
-			/*
-			if(i==0) begin i<=1; face<=4'h1; end 
-			else if(feeding==1) begin face<=4'h2; end 
-			else if (light_out==1) begin face<=4'h4; end
-			else if (echo_sig==1) begin face<=4'h5; end
-			else if (healing==1) begin face<=4'h3; end
-			else if (test==1) begin face<=4'h7; end
-			else if (value_food > 3 && value_sleep > 3 && value_fun > 3 && value_happy > 3 && value_health > 3) begin face<=4'h8; end
-			else if (value_food < 3 || value_sleep < 3 || value_fun < 3 || value_happy < 3 || value_health < 3) begin face<=4'hA; i=0; end
-			else if (value_food == 3 || value_sleep == 3 || value_fun == 3 || value_happy == 3 || value_health == 3) begin face<=4'h9; i=0; end	
-*/
 		endcase
 		end
 

@@ -54,7 +54,7 @@ assign Reset = Reset1;
 	FELIZ=4'h6, BUNNY=4'h7;
 
 	parameter START=4'h0, BARS=4'h1, CARROT=4'h2, CRUZ=4'h3, SLEEPY=4'h4, STAR=4'h5, PART_CLEAN=4'h6, 
-			TEST=4'h7, FACE_HAPPY=4'h8, FACE_NEUTRAL=4'h9, FACE_SAD=4'hA, FACE_DEAD=4'hB, STAND_BY=4'hC;
+			TEST=4'h7, FACE_HAPPY=4'h8, FACE_NEUTRAL=4'h9, FACE_SAD=4'hA, FACE_DEAD=4'hB, STAND_BY=4'hC, NTEST=4'hD;
 
 	
 	reg [8:0] i=0;
@@ -340,7 +340,7 @@ assign Reset = Reset1;
 					end
 				end
 				
-				4'h5: begin message<=8'b00011110; 
+				4'h5: begin message<=8'b11011110; 
 					if(avail) begin 
 						if(i<1) count<=4'h6;
 						else count<=4'h4;				
@@ -384,10 +384,10 @@ assign Reset = Reset1;
 				4'hC: begin comm<=1; message<=8'b00000111;  if(avail) count<=4'hD; end
 				4'hD: begin message<=8'b00001100; if(avail) count<=4'hE; end
 				4'hE: begin message<=8'b00011000; if(avail) count<=6'hF; end
-				6'hF: begin message<=8'b00010011; if(avail) count<=6'h10; end
-				6'h10: begin  message<=8'b00010000; if(avail) count<=6'h11; end
-				6'h11: begin  message<=8'b00110000; if(avail) count<=6'h12; end
-				6'h12: begin  message<=8'b01010011; if(avail) count<=6'h13; end
+				6'hF: begin message<=8'b00010010; if(avail) count<=6'h10; end
+				6'h10: begin  message<=8'b00010100; if(avail) count<=6'h11; end
+				6'h11: begin  message<=8'b00110100; if(avail) count<=6'h12; end
+				6'h12: begin  message<=8'b01010010; if(avail) count<=6'h13; end
 
 				6'h13: begin  message<=8'b10000000;
 						if(avail) begin 
@@ -773,7 +773,7 @@ assign Reset = Reset1;
 			
 			4'h5: begin comm<=1; message<=8'h0; 
 				if(avail) begin 
-					if (i<26) begin 
+					if (i<27) begin 
 						i<=i+1;
 						count<=4'h5;
 					end 
@@ -823,7 +823,7 @@ assign Reset = Reset1;
 		FACE_HAPPY: begin
 			done<=0;
 			case(count)
-			4'h0: begin spistart<=1; comm<=0; i<=0; j<=0; poss_x<=8'hA5; message<=poss_x; if(avail) count<=4'h9;end 
+			4'h0: begin spistart<=1; comm<=0; i<=0; j<=0; poss_x<=8'hA5; message<=poss_x; if(avail) count<=4'h1;end 
 			4'h1: begin poss_y<=8'h43; message<=poss_y; if(avail) count<=4'h2; end
 
 			4'h2: begin comm<=1; message<=8'b11011110;
@@ -883,10 +883,10 @@ assign Reset = Reset1;
 			4'h4: begin  comm<=0; poss_x<=8'hA5; message<=poss_x; if(avail) count<=4'h5;end  
 			4'h5: begin   poss_y<=8'h44; message<=poss_y; if(avail) count<=4'h6; end
 
-			4'h6: begin comm<=1; message<=8'h0; if(avail) count<=4'h7; end
+			4'h6: begin comm<=1; message<=8'b00010000; if(avail) count<=4'h7; end
 			4'h7: begin  message<=8'b00010010; if(avail) count<=4'h8; end
 			4'h8: begin  message<=8'b00110010; if(avail) count<=4'h9; end
-			4'h9: begin  message<=8'h0; if(avail) count<=4'hA; end
+			4'h9: begin  message<=8'b00010000; if(avail) count<=4'hA; end
 
 			4'hA: begin 
 				done<=1;
@@ -939,50 +939,61 @@ assign Reset = Reset1;
 		FACE_DEAD: begin
 			done<=0;
 			case(count)
-			4'h0: begin spistart<=1; comm<=0; i<=0; j<=0; poss_x<=8'hA4; message<=poss_x; if(avail) count<=4'h1;end 
+			4'h0: begin spistart<=1; comm<=0; i<=0; j<=0; poss_x<=8'hA5; message<=poss_x; if(avail) count<=4'h1;end 
         	4'h1: begin   poss_y<=8'h43; message<=poss_y; if(avail) count<=4'h2; end
 		
-			4'h2: begin comm<=1; message<=8'b10010001;
+			4'h2: begin comm<=1; message<=8'b10011110;
 				if(avail) begin
 					if (i==0) count<=4'h3;
-					else count<=4'h5;
+					else count<=4'h4;
 				end
 			end
 
-			4'h3: begin  message<=8'b10011110;
+			4'h3: begin  message<=8'b00001000;
 				if(avail) begin
-					if (i==0) count<=4'h4;
+					i<=i+1;
+					if (i==0) count<=4'h3;
 					else count<=4'h2;
 				end
 			end
 
-			4'h4: begin  message<=8'b00001000;
-				if(avail) begin
+			4'h4: begin  comm<=0; poss_x<=8'hA5; message<=poss_x; if(avail) count<=4'h5;end  
+		    4'h5: begin   poss_y<=8'h44; message<=poss_y; if(avail) count<=4'h6; end
+			
+			4'h6: begin comm<=1; message<=8'b00010100; if(avail) count<=4'h7; end
+			4'h7: begin  message<=8'b00010010; if(avail) count<=4'h8; end
+			4'h8: begin  message<=8'b00110010; if(avail) count<=4'h9; end
+			4'h9: begin  message<=8'b01010100; if(avail) count<=4'hA; end
+			4'hA: begin 
+					done<=1;
+					spistart<=0;
+					sketch<=STAND_BY;
+				end
+			endcase
+	end
+				
+		NTEST: begin
+			done<=0;
+			case(count)
+			4'h0: begin  spistart<=1; comm<=0; i<=0; j<=0;  poss_x<=8'h83; message<=poss_x; if(avail) count<=4'h1;end 
+			4'h1: begin   poss_y<=8'h42; message<=poss_y; if(avail) count<=4'h2; end
+			4'h2: begin comm<=1; message<=8'h0; 
+				if(avail) begin 
 					i<=i+1;
-					if (i==0) count<=4'h4;
+					if(i<6) count<=4'h2;
 					else count<=4'h3;
 				end
 			end
 			
 
-			4'h5: begin  comm<=0; poss_x<=8'hA5; message<=poss_x; if(avail) count<=4'h6;end  
-			4'h6: begin   poss_y<=8'h44; message<=poss_y; if(avail) count<=4'h7; end
-
-			4'h7: begin comm<=1; message<=8'b00010100; if(avail) count<=4'h8; end
-			4'h8: begin  message<=8'b00010010; if(avail) count<=4'h9; end
-			4'h9: begin  message<=8'b00110010; if(avail) count<=4'hA; end
-			4'hA: begin  message<=8'b01010100; if(avail) count<=4'hB; end
-
-			4'hB: begin 
+			4'h3: begin  
 				done<=1;
 				spistart<=0;
 				sketch<=STAND_BY;
 			end
-
-			endcase
-		end
-
 		endcase
 	end
+
+	endcase
+end
 endmodule
-	 

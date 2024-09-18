@@ -57,7 +57,7 @@ module spi_master(
 
 	always @(posedge clk or posedge reset) begin
 	  if (reset) begin
-			rst <=0;
+			rst <=1;
 			sclk <= 0;
 			sce <= 1;
 			shift_reg <= 0;
