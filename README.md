@@ -12,8 +12,6 @@ Este proyecto se centra en la implementación de un tamagotchi (mascota virtual)
 
 # Especificación detallada del sistema
 
-## Periféricos
-
 Especificación de los componentes del proyecto, con los detalles necesarios y la función que cumplen en el proyecto.
 
 | Componente  | Especificación | Funcionamiento|
@@ -29,9 +27,24 @@ Especificación de los componentes del proyecto, con los detalles necesarios y l
 | Leds 7 segmentos | Ánodo | Se utilizará para conocer el estado en el cual se encuentra el Botón Cambio Estado. |
 | FPGA | A-C4E6 Cyclone IV FPGA EP4CE6E22C8N | Controlador de las distintas operaciones que se desean hacer (contiene componentes lógicos programables). |
 
-## Caja Negra General
+## Sistema de botones 
 
-[<img src="fig/CAJA NEGRA DEFINITIVA.jpeg" width="800" alt="CAJA NEGRA DEFINITIVA"/>](fig)
+Para los 2 botones principales de interacción, alimentar y curar, se utiliza el modulo “debounce”, el anti-rebote evita que el circuito detecte múltiples pulsaciones de un botón cuando solo se presiona una vez debido al ruido eléctrico. Para el diseño de este apartado, se baso en la siguiente esquema: 
+
+[<img src="fig/pixelcut-export(1).png" width="300" alt="Pines Sensor ultrasónico"/>](fig)
+
+Donde se usaron 2 flip-flops tipo D, el primero de ellos captura el primer flanco de subida de botón después de que el rebote haya cesado, generando un pulso único. En el siguiente flanco de subida de reloj, el estado de Q1 se transfiere a Q2, esto introduce un pequeño retardo adicional, asegurando que cualquier rebote residual haya desaparecido. Finalmente tenemos una compuerta AND que generará una salida alta cuando Q2 esté en alto y Q2' esté en bajo, lo que ocurre solo una vez por pulsación válida del botón.
+
+[<img src="fig/pixelcut-export.png" width="300" alt="Pines Sensor ultrasónico"/>](fig)
+
+La implementación de un reloj lento o “Slow Clock” es importante ya que reduce la sensibilidad a los rebotes rápidos, como podemos apreciar en el testbench cuando “pb” genera varios pulsos, solo se genera un pulso de salida en out_signal
+
+[<img src="fig/DEBOUNCE.png" width="300" alt="Pines Sensor ultrasónico"/>](fig)
+
+Por otro lado, para los botones faltantes, Reset y Test, se uso un contador con el fin de que la señal de salida quede en alta solamente despues de 5 segundos y se usaron 2 flip-flops tipo D nuevamente para poder reducir la señal a 2 ciclos de reloj 
+
+[<img src="fig/RESET-TEST.png" width="300" alt="Pines Sensor ultrasónico"/>](fig)
+
 
 ### Sensor de ultrasonido HC-SR04
 
@@ -134,6 +147,10 @@ Pasado cierto tiempo algunos valores de estados irán disminuyendo su valor, si 
 
 [<img src="fig/tbFSMtest.png" width="1000" alt="Diagrama de flujo"/>](fig)
 Al entrar en modo test, la función de disminución de valores de estado al paso del tiempo se detiene y se permite modificar los valores cambiando la variable de change_state, para indicar cuál valor de estado se desea modificar y con las variables de feeding y healing (alimentar y curar) se aumentará y disminuirá el valor seleccionado.
+
+## Caja Negra General
+
+[<img src="fig/CAJA NEGRA DEFINITIVA.png" width="800" alt="CAJA NEGRA DEFINITIVA"/>](fig)
 
 ## Mascota
 
