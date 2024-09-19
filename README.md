@@ -235,9 +235,8 @@ end
 
 [<img src="fig/Bunny_cara feliz.png" width="200" />](fig)
 [<img src="fig/Bunny_carameh.png" width="200" />](fig)
-[<img src="fig/Bunny_caramuerto.png" width="200" />](fig)
 [<img src="fig/Bunny_caratriste.png" width="200" />](fig)
-
+[<img src="fig/Bunny_caramuerto.png" width="200" />](fig)
 
 ### Simulaciones
 
