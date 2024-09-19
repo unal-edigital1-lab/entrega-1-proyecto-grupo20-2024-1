@@ -240,7 +240,7 @@ end
 
 ### Simulaciones
 
-* Simulación master: se simulo el envio del mensaje hexadecimal A3 (1010 0011 en binario) y se puede evidenciar que sale a la pantalla por medio de `mosi` bit por bit en cada flanco positivo del reloj secundario (`sclock`), además al temrinar los 8 bits se tiene la señal de `avail` activa durante un ciclo de reloj (reloj de la FPGA).
+* Simulación master: se simulo el envio del mensaje hexadecimal A3 (1010 0011 en binario) y se puede evidenciar que sale a la pantalla por medio de `mosi` bit por bit en cada flanco positivo del reloj secundario (`sclock`), además al terminar los 8 bits se tiene la señal de `avail` activa durante un ciclo de reloj (reloj de la FPGA).
 
 [<img src="fig/Sim_master.png" width="600" />](fig) 
 
