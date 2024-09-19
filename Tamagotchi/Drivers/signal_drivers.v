@@ -27,12 +27,12 @@ assign test1 = ~test;
 wire object1;
 wire day_night;
 
-   // sensores
+    // sensores
 	photoSensor photo(.clk(clk), .ldr_input(light_out), .day_night(day_night));
 	ultrasound ultra(.clk(clk), .echo(echo_sig), .trigger(trig_sig), .object_detected(object1));
 
     // mantener presionados botones
-	 pb_tpressed reseteo(.pb_in(rst1), .clk(clk), .signal_out(Rst));
+	pb_tpressed reseteo(.pb_in(rst1), .clk(clk), .signal_out(Rst));
     pb_tpressed modoTest(.pb_in(test1), .clk(clk), .signal_out(test_sig));
 	pb_tpressed lightness(.pb_in(day_night), .clk(clk), .signal_out(light));
 	pb_tpressed echosignal(.pb_in(object1), .clk(clk), .signal_out(objectUltra));

@@ -6,6 +6,12 @@
 * David Santiago Cuellar Lopez
 
 ***
+
+# Video Tamagotchi
+
+[![Alt text](https://img.youtube.com/vi/S2Y6nbKYhNk/0.jpg)](https://www.youtube.com/watch?v=S2Y6nbKYhNk)
+
+
 # Introducción
 
 Este proyecto se centra en la implementación de un tamagotchi (mascota virtual) mediante el uso de una FPGA y diversos componentes que mejoren la visualización e interacción con el hardware que se va a crear. Se utilizará una pantalla LCD de Nokia para la visualización de la mascota y sus diversos estados, junto con esto se tienen diversos periféricos extra como un sensor de luz y un sensor de ultrasonido, además de los botones ya integrados en la tarjeta y algunos extra, que serán de ayuda para generar una mayor interacción del usuario con su mascota virtual. Todo será programado en Verilog e implementado por medio de Quartus.
@@ -31,58 +37,76 @@ Especificación de los componentes del proyecto, con los detalles necesarios y l
 
 Para los 2 botones principales de interacción, alimentar y curar, se utiliza el modulo “debounce”, el anti-rebote evita que el circuito detecte múltiples pulsaciones de un botón cuando solo se presiona una vez debido al ruido eléctrico. Para el diseño de este apartado, se baso en la siguiente esquema: 
 
-[<img src="fig/pixelcut-export(1).png" width="300" alt="Pines Sensor ultrasónico"/>](fig)
+<div align="center">
+	<img src="fig/pixelcut-export(1).png" width="300" alt="Pines Sensor ultrasónico"/>
+</div>
+
 
 Donde se usaron 2 flip-flops tipo D, el primero de ellos captura el primer flanco de subida de botón después de que el rebote haya cesado, generando un pulso único. En el siguiente flanco de subida de reloj, el estado de Q1 se transfiere a Q2, esto introduce un pequeño retardo adicional, asegurando que cualquier rebote residual haya desaparecido. Finalmente tenemos una compuerta AND que generará una salida alta cuando Q2 esté en alto y Q2' esté en bajo, lo que ocurre solo una vez por pulsación válida del botón.
 
-[<img src="fig/pixelcut-export.png" width="300" alt="Pines Sensor ultrasónico"/>](fig)
+<div align="center">
+	<img src="fig/pixelcut-export.png" width="300" alt="Pines Sensor ultrasónico"/>
+</div>
 
 La implementación de un reloj lento o “Slow Clock” es importante ya que reduce la sensibilidad a los rebotes rápidos, como podemos apreciar en el testbench cuando “pb” genera varios pulsos, solo se genera un pulso de salida en out_signal
 
-[<img src="fig/DEBOUNCE.png" width="300" alt="Pines Sensor ultrasónico"/>](fig)
+<div align="center">
+	<img src="fig/DEBOUNCE.png" width="300" alt="Pines Sensor ultrasónico"/>
+</div>
 
 Por otro lado, para los botones faltantes, Reset y Test, se uso un contador con el fin de que la señal de salida quede en alta solamente despues de 5 segundos y se usaron 2 flip-flops tipo D nuevamente para poder reducir la señal a 2 ciclos de reloj 
 
-[<img src="fig/RESET-TEST.png" width="300" alt="Pines Sensor ultrasónico"/>](fig)
-
+<div align="center">
+	<img src="fig/RESET-TEST.png" width="300" alt="Pines Sensor ultrasónico"/>
+</div>
 
 ### Sensor de ultrasonido HC-SR04
 
 _Este es un sensor ultrasónico que tiene una capacidad de detección dentro de un rango entre 0.3 a 3 metros de distancia, y tiene la siguiente descripción de pines._
 
-[<img src="fig/HC-SR04-Ultrasonic.pdf.png" width="300" alt="Pines Sensor ultrasónico"/>](fig)
+<div align="center">
+	<img src="fig/HC-SR04-Ultrasonic.pdf.png" width="300" alt="Pines Sensor ultrasónico"/>
+</div>
 
 Se utiliza el contador de la FPGA para generar un pulso de duración específica (típicamente de 10 microsegundos) en el pin Trigger, posteriormente, aunque no de forma inmediata, el pin Echo se mantiene en alto mientras el sensor está recibiendo el eco. El ancho de pulso de esta señal es proporcional a la distancia al objeto.
 
 * Sistema de Caja Negra
 
-[<img src="fig/CAJA NEGRA ULTRA.jpeg" width="400" alt="Sensor ultrasónico"/>](fig)
-
+<div align="center">
+	<img src="fig/CAJA NEGRA ULTRA.jpeg" width="400" alt="Sensor ultrasónico"/>
+</div>
 
 ### Pantalla LCD Nokia 5110
 
 _Es una pantalla blanco y negro usada anteriormente en los teléfonos de marca Nokia. Tiene 84*48 píxeles monocromáticos (84 columnas y 48 filas) para visualización, se realizará la conexión mediante el método de comunicación SPI que acepta esta pantalla._
 
-[<img src="fig/Nokia-5110-LCD-Pinout-diagram-details.webp" width="250" alt="Pines LCD"/>](fig)
+<div align="center">
+	<img src="fig/Nokia-5110-LCD-Pinout-diagram-details.webp" width="250" alt="Pines LCD"/>
+</div>
 
 En esta pantalla se mostrará a la mascota virtual así como las diferentes reacciones que pueda llegar a tener dependiendo del nivel de sus estados y las interacciones que se realicen con ella. Los niveles de los estados tendrán una escala de 1 a 5 y se verán reflejados en la pantalla como barras.
 
 * Sistema de Caja Negra
 
-[<img src="fig/CAJA NEGRA LCD.jpeg" width="500" alt="CAJA NEGRA LCD"/>](fig)
-
+<div align="center">
+	<img src="fig/CAJA NEGRA LCD.jpeg" width="500" alt="CAJA NEGRA LCD"/>
+</div>
 
 ### Sensor de luz con Fotorresistencia
 
 _Resistencia que varía en función de la luz que incide sobre su superficie, cuanto mayor sea la intensidad de la luz que incide menor será su resistencia y cuanta menos luz incida mayor será su resistencia. El voltaje de salida digital es un “0” lógico cuando la intensidad de luz es alta y es un “1” lógico cuando sucede lo contrario._
 
-[<img src="fig/modulo-sensor-ldr.jpg" width="200" alt="Pines Sensor de luz"/>](fig)
+<div align="center">
+	<img src="fig/modulo-sensor-ldr.jpg" width="200" alt="Pines Sensor de luz"/>
+</div>
 
 Se usará un sensor de luz para determinar cuando la mascota podrá descansar. Cuando el sensor no detecte luz este enviara una señal, después de un tiempo, para que la mascota virtual pueda descansar y así aumentar su nivel Sleep.
 
 * Sistema de Caja Negra
 
-[<img src="fig/CAJA NEGRA FOTO.jpeg" width="400" alt="Sensor de luz"/>](fig)
+<div align="center">
+	<img src="fig/CAJA NEGRA FOTO.jpeg" width="400" alt="Sensor de luz"/>
+</div>
 
 # Arquitectura del Sistema
 
@@ -102,7 +126,9 @@ El Tamagotchi tendrá una serie de estados que reflejaran ciertas necesidades f�
 
 ## Diagrama de Máquina de Estados (FSM)
 
-[<img src="fig/FSMgrafico.jpg" width="1000" alt="Diagrama de flujo"/>](fig)
+<div align="center">
+	<img src="fig/FSMgrafico.jpg" width="1000" alt="Diagrama de flujo"/>
+</div>
 
 Se decidió realizar 5 máquinas de estados que operan de manera paralela cada una con sus propias señales. Estas señales cambian dependiendo del tiempo y de condiciones predefinidas, los estados de cada una de las máquinas se dividen entre los estados que disminuyen el valor del estado de la mascota, los que lo aumentan y los que disminuyen Health.
 
@@ -140,26 +166,33 @@ Este código tiene su testbench adjunto que en modo normal funciona de la siguie
 
 ### Modo Normal
 
-[<img src="fig/tbFSM.png" width="1000" alt="Diagrama de flujo"/>](fig)
+<div align="center">
+	<img src="fig/tbFSM.png" width="1000" alt="Diagrama de flujo"/>
+</div>
+
 Pasado cierto tiempo algunos valores de estados irán disminuyendo su valor, si algunos de esos valores están por debajo de niveles predefinidos con anterioridad y luego de pasado cierto tiempo, disminuirán el valor del estado Health.
 
 ### Modo Test
 
-[<img src="fig/tbFSMtest.png" width="1000" alt="Diagrama de flujo"/>](fig)
+<div align="center">
+	<img src="fig/tbFSMtest.png" width="1000" alt="Diagrama de flujo"/>
+</div>
+
 Al entrar en modo test, la función de disminución de valores de estado al paso del tiempo se detiene y se permite modificar los valores cambiando la variable de change_state, para indicar cuál valor de estado se desea modificar y con las variables de feeding y healing (alimentar y curar) se aumentará y disminuirá el valor seleccionado.
 
 ## Caja Negra General
 
-[<img src="fig/CAJA NEGRA DEFINITIVA.png" width="800" alt="CAJA NEGRA DEFINITIVA"/>](fig)
+<div align="center">
+	<img src="fig/CAJA NEGRA DEFINITIVA.png" width="800" alt="CAJA NEGRA DEFINITIVA"/>
+</div>
 
 ## Mascota
 
 Se escogió un conejo como el avatar/mascota del tamagotchi y se diseñó usando píxeles para facilitar su posterior implementación en código. Este es el diseño principal y sobre el cual se basaran las interacciones de la mascota.
 
- [<img src="fig/Bunny.png" width="300" alt="Diseño mascota"/>](fig)
-
-
-
+<div align="center">
+	<img src="fig/Bunny.png" width="300" alt="Diseño mascota"/>
+</div>
 
 # Referencias
 [1] “HC-SR04 Ultrasonic Sensor Module User Guide,” *HandsOnTech*. https://www.handsontec.com/dataspecs/HC-SR04-Ultrasonic.pdf

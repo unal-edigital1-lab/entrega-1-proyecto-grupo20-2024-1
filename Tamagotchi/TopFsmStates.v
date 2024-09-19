@@ -30,7 +30,7 @@ module TopFsmStates(
 	wire [2:0] testValueF;
 
 //CONEXION ENTRADAS CON SALIDAS
-    wire feeding1;
+   wire feeding1;
 	wire healing1;
 	wire change1;
 	wire light_out1;
@@ -70,15 +70,20 @@ fsm_states states(
     .healing(healing1),
 	.change_state(change1),
 	.test(test_sig1),
+	.done(done),
+	.feed_direct1(feeding),
+	.heal_direct1(healing),
+	.light_direct1(light_out),
+	.echo_direct1(echo_sig),
+	.trig_direct1(trig_sig),
+	.test_direct1(testBut),
+	.face1(face),
 	.foodValue(foodValueF),
     .sleepValue(sleepValueF),
     .funValue(funValueF),
     .happyValue(happyValueF),
     .healthValue(healthValueF),
 	.stateTest(testValueF),
-	.face1(face),
-	.done(done),
-	//.sclock(sclk)
 	);
 
 // SE utiliza reset dirctamente de la fpga por que no funciona bien
