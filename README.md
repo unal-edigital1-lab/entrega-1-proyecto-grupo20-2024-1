@@ -246,12 +246,12 @@ end
 
 * Simulación config: Se prueba el envio incicial y la transición a diseños desde una entrada, se puede ver que luego de la señal de done (al final de dibujar la mascota), se empiezan a dibujar las barras de nivel (`draw=4'h1` ), según los niveles dados como entrada. 
 
-[<img src="fig/Sim_config.png" width="600" />](fig)
+[<img src="fig/Sim_config.png" width="1000" />](fig)
 
 * Simulación con maquina de estados (sin sensores): Se puede ver que las barritas se dibujan adecuadamente según los niveles dados, también la carita adecuada (feliz con número 4'h8), y el icono para la interacción, para esta simulación se usó `feeding=1` que representa darle alimento a la mascota (icono de zanahoria con 4'h2). 
 
-[<img src="fig/Sim_barras.png" width="600" />](fig)
-[<img src="fig/Sim_facecarrot.png" width="600" />](fig)
+[<img src="fig/Sim_barras.png" width="1000" />](fig)
+[<img src="fig/Sim_facecarrot.png" width="1000" />](fig)
  
 			
 
