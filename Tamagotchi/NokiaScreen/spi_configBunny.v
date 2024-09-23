@@ -23,7 +23,7 @@ module spi_configBunny(
 	output dc,
 	output rst,
 	
-	//comunicacion core 
+	//comunicacion fsm 
 	input [3:0] nivel_hambre, 
 	input [3:0] nivel_sueno, 
 	input [3:0] nivel_diversion, 
@@ -60,9 +60,8 @@ assign Reset = Reset1;
 	reg [8:0] i=0;
 	reg [8:0] j=0;
 	reg [8:0] k=0;
-	//reg [8:0] nivel_hambre;
 	reg [3:0] nivel;
-	assign freq_div=2500000;//25;(max 4MHz, min div 8)
+	assign freq_div=2500000;//(max 4MHz, min div 8)
 	
 
 	spi_master Spi_Master (
@@ -87,7 +86,7 @@ assign Reset = Reset1;
 		message<=0;
 		case(sketch)
 		
-		START:begin
+		START:begin //inicializa y dibuja diseños para las barras de nivel y mascota
 			case(state) 
 			INIT:begin //configuracion inicial
 				done<=0;
@@ -311,7 +310,7 @@ assign Reset = Reset1;
 			end
 
 			
-			BUNNY: begin //dibujar
+			BUNNY: begin //mascota
 				poss_x<=8'hA2;
 				poss_y<=8'h43;
 				
@@ -431,13 +430,13 @@ assign Reset = Reset1;
 			endcase
 		end
 			
-		STAND_BY: begin 
+		STAND_BY: begin //lee diseño entrada desde fpga, reinicializa count
 			count<=4'h0;
 			if(sketch != draw) sketch<=draw;
 		end 
 		
 					
-		BARS: begin 
+		BARS: begin //barras de nivel 
 			done<=0;
 			case(count)
 			4'h0: begin  spistart<=1; i<=0; j<=0; nivel<=nivel_hambre; comm<=0; poss_x<=8'h89; message<=poss_x; if(avail) count<=4'h1; end 
@@ -753,7 +752,7 @@ assign Reset = Reset1;
 			endcase	
 		end
 
-		PART_CLEAN: begin //limpia alrededor del conejo
+		PART_CLEAN: begin //limpia iconos en pantalla
 			done<=0;
 			case(count)
 			4'h0: begin  spistart<=1; comm<=0; i<=0; j<=0; poss_y<=8'h42; message<=poss_y; if(avail) count<=4'h1;end
@@ -801,7 +800,7 @@ assign Reset = Reset1;
 			endcase
 		end
 
-		TEST: begin
+		TEST: begin //dibuja T en modo test
 			done<=0;
 			case(count)
 			4'h0: begin  spistart<=1; comm<=0; i<=0; j<=0;  poss_x<=8'h83; message<=poss_x; if(avail) count<=4'h1;end 
@@ -972,7 +971,7 @@ assign Reset = Reset1;
 			endcase
 	end
 				
-		NTEST: begin
+		NTEST: begin //borra T al salir de modo test
 			done<=0;
 			case(count)
 			4'h0: begin  spistart<=1; comm<=0; i<=0; j<=0;  poss_x<=8'h83; message<=poss_x; if(avail) count<=4'h1;end 
