@@ -16,6 +16,12 @@
 
 Este proyecto se centra en la implementación de un tamagotchi (mascota virtual) mediante el uso de una FPGA y diversos componentes que mejoren la visualización e interacción con el hardware que se va a crear. Se utilizará una pantalla LCD de Nokia para la visualización de la mascota y sus diversos estados, junto con esto se tienen diversos periféricos extra como un sensor de luz y un sensor de ultrasonido, además de los botones ya integrados en la tarjeta y algunos extra, que serán de ayuda para generar una mayor interacción del usuario con su mascota virtual. Todo será programado en Verilog e implementado por medio de Quartus.
 
+## Caja Negra General
+
+<div align="center">
+	<img src="fig/CAJA NEGRA DEFINITIVA.png" width="800" alt="CAJA NEGRA DEFINITIVA"/>
+</div>
+
 # Especificación detallada del sistema
 
 Especificación de los componentes del proyecto, con los detalles necesarios y la función que cumplen en el proyecto.
@@ -70,11 +76,17 @@ _Este es un sensor ultrasónico que tiene una capacidad de detección dentro de 
 
 Se utiliza el contador de la FPGA para generar un pulso de duración específica (típicamente de 10 microsegundos) en el pin Trigger, posteriormente, aunque no de forma inmediata, el pin Echo se mantiene en alto mientras el sensor está recibiendo el eco. El ancho de pulso de esta señal es proporcional a la distancia al objeto.
 
+<div align="center">
+	<img src="fig/Funcionamiento ultra.jpg" width="350" alt="Sensor ultrasónico"/>
+</div>
+
 * Sistema de Caja Negra
 
 <div align="center">
-	<img src="fig/CAJA NEGRA ULTRA.jpeg" width="400" alt="Sensor ultrasónico"/>
+	<img src="fig/CAJA NEGRA ULTRA.jpg" width="400" alt="Sensor ultrasónico"/>
 </div>
+
+
 
 ### Pantalla LCD Nokia 5110
 
@@ -89,7 +101,7 @@ En esta pantalla se mostrará a la mascota virtual así como las diferentes reac
 * Sistema de Caja Negra
 
 <div align="center">
-	<img src="fig/CAJA NEGRA LCD.jpeg" width="500" alt="CAJA NEGRA LCD"/>
+	<img src="fig/CAJA NEGRA LCD.jpg" width="500" alt="CAJA NEGRA LCD"/>
 </div>
 
 ### Sensor de luz con Fotorresistencia
@@ -180,11 +192,6 @@ Pasado cierto tiempo algunos valores de estados irán disminuyendo su valor, si 
 
 Al entrar en modo test, la función de disminución de valores de estado al paso del tiempo se detiene y se permite modificar los valores cambiando la variable de change_state, para indicar cuál valor de estado se desea modificar y con las variables de feeding y healing (alimentar y curar) se aumentará y disminuirá el valor seleccionado.
 
-## Caja Negra General
-
-<div align="center">
-	<img src="fig/CAJA NEGRA DEFINITIVA.png" width="800" alt="CAJA NEGRA DEFINITIVA"/>
-</div>
 
 ## Visualización 
 
