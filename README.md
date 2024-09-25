@@ -19,8 +19,8 @@ Este proyecto se centra en la implementación de un tamagotchi (mascota virtual)
 ## Caja Negra General
 
 <div align="center">
-	<img src="fig/CAJAS NEGRAS(1).jpg" width="800" alt="CAJA NEGRA DEFINITIVA"/>
-</div>
+	<img src="fig/CAJAS NEGRAS(2).jpg" width="800" alt="CAJA NEGRA DEFINITIVA"/>
+</div
 
 # Especificación detallada del sistema
 
